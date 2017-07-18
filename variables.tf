@@ -6,11 +6,13 @@ variable "subnets" {
 
 variable "envname" {}
 
+variable "envtype" {}
+
 variable "azs" {
   type = "list"
 }
 
-variable "replicacount" {
+variable "replica_count" {
   default = "0"
 }
 

@@ -16,9 +16,10 @@ module "aurora-db" {
   source                          = "../modules//tf-aws-aurora"
   name                            = "prod-aurora-db"
   envname                         = "prod"
+  envtype                         = "prod"
   subnets                         = ["${data.terraform_remote_state.vpc.vpc_private_subnets}"]
   azs                             = "${var.aws_zones}"
-  replicacount                    = "0"
+  replica_count                    = "0"
   security_groups                 = ["${module.db_sg.security_group_id}"]
   instance_type                   = "db.t2.medium"
   username                        = "root"
@@ -38,8 +39,9 @@ Variables marked with an * are mandatory, the others have sane defaults and can 
 * `name`\* - Name given to DB subnet group
 * `subnets`\* - List of subnet IDs to use
 * `envname`\* - Environment name (eg,test, stage or prod)
+* `envtype`\* - Environment type (eg,prod or nonprod)
 * `azs`\* - List of AZs to use
-* `replicacount`\ - Number of additional DB nodes to create (default: `0` )
+* `replica_count`\ - Number of additional DB nodes to create (default: `0` )
 * `security_groups`\* - List of security groups to use
 * `instance_type` - Instance type to use for DBs (default: `db.t2.small`)
 * `publicly_accessible` - Should the DB be publicly accessible or not (default: `false` )

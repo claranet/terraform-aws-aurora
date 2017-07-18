@@ -3,6 +3,11 @@ resource "aws_db_subnet_group" "main" {
   name        = "${var.name}"
   description = "Group of DB subnets"
   subnet_ids  = ["${var.subnets}"]
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
 }
 
 // Create single DB instance
@@ -19,12 +24,17 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   monitoring_interval          = "${var.monitoring_interval}"
   auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
   promotion_tier               = "0"
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
 resource "aws_rds_cluster_instance" "cluster_instance_n" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
-  count                        = "${var.replicacount}"
+  count                        = "${var.replica_count}"
   identifier                   = "${var.envname}-aurora-node-${count.index + 1}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   instance_class               = "${var.instance_type}"
@@ -38,6 +48,11 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   monitoring_interval          = "${var.monitoring_interval}"
   auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
   promotion_tier               = "${count.index + 1}"
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
 }
 
 // Create DB Cluster
