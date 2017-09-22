@@ -12,23 +12,29 @@ Gives you:
 ## Usage example
 
 ```
-module "aurora-db" {
-  source                          = "../modules//tf-aws-aurora"
-  name                            = "prod-aurora-db"
-  envname                         = "prod"
-  envtype                         = "prod"
-  subnets                         = ["${data.terraform_remote_state.vpc.vpc_private_subnets}"]
-  azs                             = "${var.aws_zones}"
-  replica_count                    = "0"
-  security_groups                 = ["${module.db_sg.security_group_id}"]
-  instance_type                   = "db.t2.medium"
-  username                        = "root"
-  password                        = "changeme"
-  backup_retention_period         = "5"
-  final_snapshot_identifier       = "final-db-snapshot-prod"
-  storage_encrypted               = "true"
-  apply_immediately               = "true"
-  monitoring_interval             = "10"
+resource "aws_sns_topic" "db_alarms" {
+  name = "aurora-db-alarms"
+}
+
+module "aurora_db" {
+  source                    = "../.."
+  name                      = "test-aurora-db"
+  envname                   = "test"
+  envtype                   = "test"
+  subnets                   = ["${module.vpc.private_subnets}"]
+  azs                       = ["${module.vpc.availability_zones}"]
+  replica_count             = "1"
+  security_groups           = ["${aws_security_group.allow_all.id}"]
+  instance_type             = "db.t2.medium"
+  username                  = "root"
+  password                  = "changeme"
+  backup_retention_period   = "5"
+  final_snapshot_identifier = "final-db-snapshot-prod"
+  storage_encrypted         = "true"
+  apply_immediately         = "true"
+  monitoring_interval       = "10"
+  cw_alarms                 = true
+  cw_sns_topic              = "${aws_sns_topic.db_alarms.id}"
 }
 ```
 
@@ -60,6 +66,13 @@ Variables marked with an * are mandatory, the others have sane defaults and can 
 * `db_cluster_parameter_group_name` - The name of DB Cluster parameter group to use (default: `default.aurora5.6` )
 * `snapshot_identifier` - Specifies whether or not to create this cluster from an existing snapshot (default: `""` )
 * `storage_encrypted` - Specifies whether the underlying storage layer should be encrypted (default: `true` )
+* `cw_alarms` - Whether to create CloudWatch alarms - you must also specify
+    `cw_sns_topic` when enabling (default: `false`)
+* `cw_sns_topic` - An SNS topic to publish CloudWatch alarms to, required for all
+    other `cw` prefixed options
+* `cw_max_conns` - Connection count beyond which to trigger a CloudWatch alarm (default: `500`)
+* `cw_max_cpu` - CPU threshold above which to alarm (default: `85`%)
+* `cw_max_replica_lag` - Maximum Aurora replica lag in milliseconds above which to alarm (default: `2000`)
 
 ## Outputs
 
