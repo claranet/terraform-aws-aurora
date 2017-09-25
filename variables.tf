@@ -86,3 +86,23 @@ variable "snapshot_identifier" {
 variable "storage_encrypted" {
   default = "true"
 }
+
+variable "cw_alarms" {
+  default = false
+}
+
+variable "cw_sns_topic" {
+  default = "false"
+}
+
+variable "cw_max_conns" {
+  default = "500"
+}
+
+variable "cw_max_cpu" {
+  default = "85"
+}
+
+variable "cw_max_replica_lag" {
+  default = "2000"
+}
