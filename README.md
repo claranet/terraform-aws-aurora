@@ -53,9 +53,9 @@ module "aurora_db" {
 | Name | Description | Default | Required |
 |------|-------------|:-----:|:-----:|
 | apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | `false` | no |
-| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | `false` | no |
+| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | `true` | no |
 | azs | List of AZs to use | - | yes |
-| backup_retention_period | How long to keep backups for (in days) | `0` | no |
+| backup_retention_period | How long to keep backups for (in days) | `7` | no |
 | cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | `false` | no |
 | cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | `500` | no |
 | cw_max_cpu | CPU threshold above which to alarm | `85` | no |

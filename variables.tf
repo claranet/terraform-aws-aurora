@@ -70,7 +70,7 @@ variable "skip_final_snapshot" {
 
 variable "backup_retention_period" {
   type        = "string"
-  default     = "0"
+  default     = "7"
   description = "How long to keep backups for (in days)"
 }
 
@@ -106,7 +106,7 @@ variable "monitoring_interval" {
 
 variable "auto_minor_version_upgrade" {
   type        = "string"
-  default     = "false"
+  default     = "true"
   description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window"
 }
 
