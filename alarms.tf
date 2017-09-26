@@ -83,7 +83,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_replica_lag" {
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-AuroraReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "5"
-  metric_name         = "ReplicaLag"
+  metric_name         = "AuroraReplicaLag"
   namespace           = "AWS/RDS"
   period              = "60"
   statistic           = "Maximum"
