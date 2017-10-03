@@ -1,8 +1,10 @@
 ## 1.0.2 (September 27, 2017)
 
 IMPROVEMENTS:
-* Corrected CloudWatch metric alarm name for 'AuroraReplicaLag'
 * Added MIT license
+
+BUG FIXES:
+* Corrected CloudWatch metric alarm name for 'AuroraReplicaLag'
 
 
 ## 1.0.1 (September 26, 2017)
