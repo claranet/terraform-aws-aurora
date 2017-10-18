@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_writer" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_reader" {
-  count               = "${var.cw_alarms && var.replica_count ? 1 : 0}"
+  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-DatabaseConnections"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_writer" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_reader" {
-  count               = "${var.cw_alarms && var.replica_count ? 1 : 0}"
+  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
@@ -79,7 +79,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_reader" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_replica_lag" {
-  count               = "${var.cw_alarms && var.replica_count ? 1 : 0}"
+  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-AuroraReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "5"
@@ -96,6 +96,4 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_replica_lag" {
     DBClusterIdentifier = "${aws_rds_cluster.default.id}"
     Role                = "READER"
   }
-
-  count = "${var.read_replica_count}"
 }
