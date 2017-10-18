@@ -96,6 +96,4 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_replica_lag" {
     DBClusterIdentifier = "${aws_rds_cluster.default.id}"
     Role                = "READER"
   }
-
-  count = "${var.read_replica_count}"
 }
