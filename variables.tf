@@ -58,7 +58,7 @@ variable "password" {
 
 variable "final_snapshot_identifier" {
   type        = "string"
-  default     = "final_snapshot"
+  default     = "final"
   description = "The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too."
 }
 
