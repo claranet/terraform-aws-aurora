@@ -50,37 +50,38 @@ module "aurora_db" {
 
 ## Inputs
 
-| Name | Description | Default | Required |
-|------|-------------|:-----:|:-----:|
-| apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | `false` | no |
-| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | `true` | no |
-| azs | List of AZs to use | - | yes |
-| backup_retention_period | How long to keep backups for (in days) | `7` | no |
-| cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | `false` | no |
-| cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | `500` | no |
-| cw_max_cpu | CPU threshold above which to alarm | `85` | no |
-| cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | `2000` | no |
-| cw_sns_topic | An SNS topic to publish CloudWatch alarms to | `false` | no |
-| db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | `default.aurora5.6` | no |
-| db_parameter_group_name | The name of a DB parameter group to use | `default.aurora5.6` | no |
-| envname | Environment name (eg,test, stage or prod) | - | yes |
-| envtype | Environment type (eg,prod or nonprod) | - | yes |
-| final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | `final_snapshot` | no |
-| instance_type | Instance type to use | `db.t2.small` | no |
-| monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | `0` | no |
-| name | Name given to DB subnet group | - | yes |
-| password | Master DB password | - | yes |
-| port | The port on which to accept connections | `3306` | no |
-| preferred_backup_window | When to perform DB backups | `02:00-03:00` | no |
-| preferred_maintenance_window | When to perform DB maintenance | `sun:05:00-sun:06:00` | no |
-| publicly_accessible | Whether the DB should have a public IP address | `false` | no |
-| replica_count | Number of reader nodes to create | `0` | no |
-| security_groups | VPC Security Group IDs | - | yes |
-| skip_final_snapshot | Should a final snapshot be created on cluster destroy | `false` | no |
-| snapshot_identifier | DB snapshot to create this database from | `` | no |
-| storage_encrypted | Specifies whether the underlying storage layer should be encrypted | `true` | no |
-| subnets | List of subnet IDs to use | - | yes |
-| username | Master DB username | `root` | no |
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | string | `false` | no |
+| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | string | `true` | no |
+| azs | List of AZs to use | list | - | yes |
+| backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
+| cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `false` | no |
+| cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | string | `500` | no |
+| cw_max_cpu | CPU threshold above which to alarm | string | `85` | no |
+| cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | string | `2000` | no |
+| cw_sns_topic | An SNS topic to publish CloudWatch alarms to | string | `false` | no |
+| db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | string | `default.aurora5.6` | no |
+| db_parameter_group_name | The name of a DB parameter group to use | string | `default.aurora5.6` | no |
+| envname | Environment name (eg,test, stage or prod) | string | - | yes |
+| envtype | Environment type (eg,prod or nonprod) | string | - | yes |
+| final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |
+| identifier_prefix | Prefix for cluster and instance identifier | string | `` | no |
+| instance_type | Instance type to use | string | `db.t2.small` | no |
+| monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | string | `0` | no |
+| name | Name given to DB subnet group | string | - | yes |
+| password | Master DB password | string | - | yes |
+| port | The port on which to accept connections | string | `3306` | no |
+| preferred_backup_window | When to perform DB backups | string | `02:00-03:00` | no |
+| preferred_maintenance_window | When to perform DB maintenance | string | `sun:05:00-sun:06:00` | no |
+| publicly_accessible | Whether the DB should have a public IP address | string | `false` | no |
+| replica_count | Number of reader nodes to create | string | `0` | no |
+| security_groups | VPC Security Group IDs | list | - | yes |
+| skip_final_snapshot | Should a final snapshot be created on cluster destroy | string | `false` | no |
+| snapshot_identifier | DB snapshot to create this database from | string | `` | no |
+| storage_encrypted | Specifies whether the underlying storage layer should be encrypted | string | `true` | no |
+| subnets | List of subnet IDs to use | list | - | yes |
+| username | Master DB username | string | `root` | no |
 
 ## Outputs
 

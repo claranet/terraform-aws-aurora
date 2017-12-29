@@ -18,6 +18,12 @@ variable "envtype" {
   description = "Environment type (eg,prod or nonprod)"
 }
 
+variable "identifier_prefix" {
+	type = "string"
+	default = ""
+	description = "Prefix for cluster and instance identifier"
+}
+
 variable "azs" {
   type        = "list"
   description = "List of AZs to use"
