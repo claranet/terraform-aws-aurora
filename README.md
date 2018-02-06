@@ -47,7 +47,7 @@ module "aurora_db" {
 }
 ```
 
-These additional parameters need specifing for a PostgreSQL instance:
+These additional parameters need specifying for a PostgreSQL instance:
 ```
 module "aurora_db" {
   ...
