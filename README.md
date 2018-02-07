@@ -47,6 +47,19 @@ module "aurora_db" {
 }
 ```
 
+These additional parameters need specifying for a PostgreSQL instance:
+```
+module "aurora_db" {
+  ...
+  instance_type                   = "db.r4.large"
+  engine                          = "aurora-postgresql"
+  port                            = 5432
+  db_parameter_group_name         = "default.aurora-postgresql9.6"
+  db_cluster_parameter_group_name = "default.aurora-postgresql9.6"
+  ...
+}
+```
+
 
 ## Inputs
 
@@ -63,6 +76,7 @@ module "aurora_db" {
 | cw_sns_topic | An SNS topic to publish CloudWatch alarms to | string | `false` | no |
 | db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | string | `default.aurora5.6` | no |
 | db_parameter_group_name | The name of a DB parameter group to use | string | `default.aurora5.6` | no |
+| engine | Aurora database engine type, currently aurora or aurora-postgresql | string | `aurora` | no |
 | envname | Environment name (eg,test, stage or prod) | string | - | yes |
 | envtype | Environment type (eg,prod or nonprod) | string | - | yes |
 | final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |

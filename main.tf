@@ -47,6 +47,19 @@
   *   cw_sns_topic              = "${aws_sns_topic.db_alarms.id}"
   * }
   * ```
+  *
+  * These additional parameters need specifying for a PostgreSQL instance:
+  * ```
+  * module "aurora_db" {
+  *   ...
+  *   instance_type                   = "db.r4.large"
+  *   engine                          = "aurora-postgresql"
+  *   port                            = 5432
+  *   db_parameter_group_name         = "default.aurora-postgresql9.6"
+  *   db_cluster_parameter_group_name = "default.aurora-postgresql9.6"
+  *   ...
+  * }
+  * ```
 */
 
 // DB Subnet Group creation
@@ -65,6 +78,7 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-0", var.identifier_prefix) : format("%s-aurora-node-0", var.envname)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
+  engine                       = "${var.engine}"
   instance_class               = "${var.instance_type}"
   publicly_accessible          = "${var.publicly_accessible}"
   db_subnet_group_name         = "${aws_db_subnet_group.main.name}"
@@ -86,6 +100,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
 resource "aws_rds_cluster_instance" "cluster_instance_n" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
   count                        = "${var.replica_count}"
+  engine                       = "${var.engine}"
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   instance_class               = "${var.instance_type}"
@@ -109,6 +124,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
 resource "aws_rds_cluster" "default" {
   cluster_identifier              = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
   availability_zones              = ["${var.azs}"]
+  engine                          = "${var.engine}"
   master_username                 = "${var.username}"
   master_password                 = "${var.password}"
   final_snapshot_identifier       = "${var.final_snapshot_identifier}-${random_id.server.hex}"

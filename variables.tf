@@ -19,9 +19,9 @@ variable "envtype" {
 }
 
 variable "identifier_prefix" {
-	type = "string"
-	default = ""
-	description = "Prefix for cluster and instance identifier"
+  type        = "string"
+  default     = ""
+  description = "Prefix for cluster and instance identifier"
 }
 
 variable "azs" {
@@ -168,4 +168,10 @@ variable "cw_max_replica_lag" {
   type        = "string"
   default     = "2000"
   description = "Maximum Aurora replica lag in milliseconds above which to alarm"
+}
+
+variable "engine" {
+  type        = "string"
+  default     = "aurora"
+  description = "Aurora database engine type, currently aurora or aurora-postgresql"
 }
