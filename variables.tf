@@ -173,5 +173,11 @@ variable "cw_max_replica_lag" {
 variable "engine" {
   type        = "string"
   default     = "aurora"
-  description = "Aurora database engine type, currently aurora or aurora-postgresql"
+  description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
+}
+
+variable "engine-version" {
+  type        = "string"
+  default     = "5.6.10a"
+  description = "Aurora database engine version."
 }

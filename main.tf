@@ -19,48 +19,143 @@
   *
   * `terraform-docs md . > README.md`
   *
-  * ## Usage example
+  * ## Usage examples
   *
-  * ```
+  * *It is recommended you always create a parameter group, even if it exactly matches the defaults.*
+  * Changing the parameter group in use requires a restart of the DB cluster, modifying parameters within a group
+  * may not (depending on the parameter being altered)
+  *
+  * ### Aurora 1.x (MySQL 5.6)
+  *
+  * 
+  * resource "aws_sns_topic" "db_alarms_56" {
+  *   name = "aurora-db-alarms-56"
+  * }
+  * 
+  * module "aurora_db_56" {
+  *   source                          = "../.."
+  *   name                            = "test-aurora-db-56"
+  *   envname                         = "test56"
+  *   envtype                         = "test"
+  *   subnets                         = ["${module.vpc.private_subnets}"]
+  *   azs                             = ["${module.vpc.availability_zones}"]
+  *   replica_count                   = "1"
+  *   security_groups                 = ["${aws_security_group.allow_all.id}"]
+  *   instance_type                   = "db.t2.medium"
+  *   username                        = "root"
+  *   password                        = "changeme"
+  *   backup_retention_period         = "5"
+  *   final_snapshot_identifier       = "final-db-snapshot-prod"
+  *   storage_encrypted               = "true"
+  *   apply_immediately               = "true"
+  *   monitoring_interval             = "10"
+  *   cw_alarms                       = true
+  *   cw_sns_topic                    = "${aws_sns_topic.db_alarms_56.id}"
+  *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
+  *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
+  * }
+  * 
+  * resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
+  *   name        = "test-aurora-db-56-parameter-group"
+  *   family      = "aurora5.6"
+  *   description = "test-aurora-db-56-parameter-group"
+  * }
+  * 
+  * resource "aws_rds_cluster_parameter_group" "aurora_cluster_56_parameter_group" {
+  *   name        = "test-aurora-56-cluster-parameter-group"
+  *   family      = "aurora5.6"
+  *   description = "test-aurora-56-cluster-parameter-group"
+  * }
+  *
+  * ### Aurora 2.x (MySQL 5.7)
+  *
+  * ```hcl
   * resource "aws_sns_topic" "db_alarms" {
   *   name = "aurora-db-alarms"
   * }
-  *
-  * module "aurora_db" {
-  *   source                    = "../.."
-  *   name                      = "test-aurora-db"
-  *   envname                   = "test"
-  *   envtype                   = "test"
-  *   subnets                   = ["${module.vpc.private_subnets}"]
-  *   azs                       = ["${module.vpc.availability_zones}"]
-  *   replica_count             = "1"
-  *   security_groups           = ["${aws_security_group.allow_all.id}"]
-  *   instance_type             = "db.t2.medium"
-  *   username                  = "root"
-  *   password                  = "changeme"
-  *   backup_retention_period   = "5"
-  *   final_snapshot_identifier = "final-db-snapshot-prod"
-  *   storage_encrypted         = "true"
-  *   apply_immediately         = "true"
-  *   monitoring_interval       = "10"
-  *   cw_alarms                 = true
-  *   cw_sns_topic              = "${aws_sns_topic.db_alarms.id}"
+  * 
+  * module "aurora_db_57" {
+  *   source                          = "../.."
+  *   engine                          = "aurora-mysql"
+  *   engine-version                  = "5.7.12"
+  *   name                            = "test-aurora-db-57"
+  *   envname                         = "test-57"
+  *   envtype                         = "test"
+  *   subnets                         = ["${module.vpc.private_subnets}"]
+  *   azs                             = ["${module.vpc.availability_zones}"]
+  *   replica_count                   = "1"
+  *   security_groups                 = ["${aws_security_group.allow_all.id}"]
+  *   instance_type                   = "db.t2.medium"
+  *   username                        = "root"
+  *   password                        = "changeme"
+  *   backup_retention_period         = "5"
+  *   final_snapshot_identifier       = "final-db-snapshot-prod"
+  *   storage_encrypted               = "true"
+  *   apply_immediately               = "true"
+  *   monitoring_interval             = "10"
+  *   cw_alarms                       = true
+  *   cw_sns_topic                    = "${aws_sns_topic.db_alarms.id}"
+  *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_57_parameter_group.id}"
+  *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_57_cluster_parameter_group.id}"
+  * }
+  * 
+  * resource "aws_db_parameter_group" "aurora_db_57_parameter_group" {
+  *   name        = "test-aurora-db-57-parameter-group"
+  *   family      = "aurora-mysql5.7"
+  *   description = "test-aurora-db-57-parameter-group"
+  * }
+  * 
+  * resource "aws_rds_cluster_parameter_group" "aurora_57_cluster_parameter_group" {
+  *   name        = "test-aurora-57-cluster-parameter-group"
+  *   family      = "aurora-mysql5.7"
+  *   description = "test-aurora-57-cluster-parameter-group"
   * }
   * ```
+  ### Aurora PostgreSQL
   *
-  * These additional parameters need specifying for a PostgreSQL instance:
-  * ```
-  * module "aurora_db" {
-  *   ...
-  *   instance_type                   = "db.r4.large"
+  * ```hcl
+  * resource "aws_sns_topic" "db_alarms_postgres96" {
+  *   name = "aurora-db-alarms-postgres96"
+  * }
+  *
+  * module "aurora_db_postgres96" {
+  *   source                          = "../.."
   *   engine                          = "aurora-postgresql"
-  *   port                            = 5432
-  *   db_parameter_group_name         = "default.aurora-postgresql9.6"
-  *   db_cluster_parameter_group_name = "default.aurora-postgresql9.6"
-  *   ...
+  *   engine-version                  = "9.6.3"
+  *   name                            = "test-aurora-db-postgres96"
+  *   envname                         = "test-pg96"
+  *   envtype                         = "test"
+  *   subnets                         = ["${module.vpc.private_subnets}"]
+  *   azs                             = ["${module.vpc.availability_zones}"]
+  *   replica_count                   = "1"
+  *   security_groups                 = ["${aws_security_group.allow_all.id}"]
+  *   instance_type                   = "db.r4.large"
+  *   username                        = "root"
+  *   password                        = "changeme"
+  *   backup_retention_period         = "5"
+  *   final_snapshot_identifier       = "final-db-snapshot-prod"
+  *   storage_encrypted               = "true"
+  *   apply_immediately               = "true"
+  *   monitoring_interval             = "10"
+  *   cw_alarms                       = true
+  *   cw_sns_topic                    = "${aws_sns_topic.db_alarms_postgres96.id}"
+  *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_postgres96_parameter_group.id}"
+  *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_postgres96_parameter_group.id}"
+  * }
+  *
+  * resource "aws_db_parameter_group" "aurora_db_postgres96_parameter_group" {
+  *   name        = "test-aurora-db-postgres96-parameter-group"
+  *   family      = "aurora-postgresql9.6"
+  *   description = "test-aurora-db-postgres96-parameter-group"
+  * }
+  *
+  * resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_group" {
+  *   name        = "test-aurora-postgres96-cluster-parameter-group"
+  *   family      = "aurora-postgresql9.6"
+  *   description = "test-aurora-postgres96-cluster-parameter-group"
   * }
   * ```
-*/
+  */
 
 // DB Subnet Group creation
 resource "aws_db_subnet_group" "main" {
