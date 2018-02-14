@@ -220,6 +220,7 @@ resource "aws_rds_cluster" "default" {
   cluster_identifier              = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
   availability_zones              = ["${var.azs}"]
   engine                          = "${var.engine}"
+  engine_version                  = "${var.engine-version}"
   master_username                 = "${var.username}"
   master_password                 = "${var.password}"
   final_snapshot_identifier       = "${var.final_snapshot_identifier}-${random_id.server.hex}"
