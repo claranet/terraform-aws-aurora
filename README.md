@@ -18,84 +18,180 @@ This README is generated with [terraform-docs](https://github.com/segmentio/terr
 
 `terraform-docs md . > README.md`
 
-## Usage example
+## Usage examples
 
-```
+*It is recommended you always create a parameter group, even if it exactly matches the defaults.*
+Changing the parameter group in use requires a restart of the DB cluster, modifying parameters within a group
+may not (depending on the parameter being altered)
+
+### Aurora 1.x (MySQL 5.6)
+
+
+resource "aws_sns_topic" "db_alarms_56" {
+  name = "aurora-db-alarms-56"
+}
+
+module "aurora_db_56" {
+  source                          = "../.."
+  name                            = "test-aurora-db-56"
+  envname                         = "test56"
+  envtype                         = "test"
+  subnets                         = ["${module.vpc.private_subnets}"]
+  azs                             = ["${module.vpc.availability_zones}"]
+  replica_count                   = "1"
+  security_groups                 = ["${aws_security_group.allow_all.id}"]
+  instance_type                   = "db.t2.medium"
+  username                        = "root"
+  password                        = "changeme"
+  backup_retention_period         = "5"
+  final_snapshot_identifier       = "final-db-snapshot-prod"
+  storage_encrypted               = "true"
+  apply_immediately               = "true"
+  monitoring_interval             = "10"
+  cw_alarms                       = true
+  cw_sns_topic                    = "${aws_sns_topic.db_alarms_56.id}"
+  db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
+  db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
+}
+
+resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
+  name        = "test-aurora-db-56-parameter-group"
+  family      = "aurora5.6"
+  description = "test-aurora-db-56-parameter-group"
+}
+
+resource "aws_rds_cluster_parameter_group" "aurora_cluster_56_parameter_group" {
+  name        = "test-aurora-56-cluster-parameter-group"
+  family      = "aurora5.6"
+  description = "test-aurora-56-cluster-parameter-group"
+}
+
+### Aurora 2.x (MySQL 5.7)
+
+```hcl
 resource "aws_sns_topic" "db_alarms" {
   name = "aurora-db-alarms"
 }
 
-module "aurora_db" {
-  source                    = "../.."
-  name                      = "test-aurora-db"
-  envname                   = "test"
-  envtype                   = "test"
-  subnets                   = ["${module.vpc.private_subnets}"]
-  azs                       = ["${module.vpc.availability_zones}"]
-  replica_count             = "1"
-  security_groups           = ["${aws_security_group.allow_all.id}"]
-  instance_type             = "db.t2.medium"
-  username                  = "root"
-  password                  = "changeme"
-  backup_retention_period   = "5"
-  final_snapshot_identifier = "final-db-snapshot-prod"
-  storage_encrypted         = "true"
-  apply_immediately         = "true"
-  monitoring_interval       = "10"
-  cw_alarms                 = true
-  cw_sns_topic              = "${aws_sns_topic.db_alarms.id}"
+module "aurora_db_57" {
+  source                          = "../.."
+  engine                          = "aurora-mysql"
+  engine-version                  = "5.7.12"
+  name                            = "test-aurora-db-57"
+  envname                         = "test-57"
+  envtype                         = "test"
+  subnets                         = ["${module.vpc.private_subnets}"]
+  azs                             = ["${module.vpc.availability_zones}"]
+  replica_count                   = "1"
+  security_groups                 = ["${aws_security_group.allow_all.id}"]
+  instance_type                   = "db.t2.medium"
+  username                        = "root"
+  password                        = "changeme"
+  backup_retention_period         = "5"
+  final_snapshot_identifier       = "final-db-snapshot-prod"
+  storage_encrypted               = "true"
+  apply_immediately               = "true"
+  monitoring_interval             = "10"
+  cw_alarms                       = true
+  cw_sns_topic                    = "${aws_sns_topic.db_alarms.id}"
+  db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_57_parameter_group.id}"
+  db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_57_cluster_parameter_group.id}"
+}
+
+resource "aws_db_parameter_group" "aurora_db_57_parameter_group" {
+  name        = "test-aurora-db-57-parameter-group"
+  family      = "aurora-mysql5.7"
+  description = "test-aurora-db-57-parameter-group"
+}
+
+resource "aws_rds_cluster_parameter_group" "aurora_57_cluster_parameter_group" {
+  name        = "test-aurora-57-cluster-parameter-group"
+  family      = "aurora-mysql5.7"
+  description = "test-aurora-57-cluster-parameter-group"
 }
 ```
+### Aurora PostgreSQL
 
-These additional parameters need specifying for a PostgreSQL instance:
-```
-module "aurora_db" {
-  ...
-  instance_type                   = "db.r4.large"
+```hcl
+resource "aws_sns_topic" "db_alarms_postgres96" {
+  name = "aurora-db-alarms-postgres96"
+}
+
+module "aurora_db_postgres96" {
+  source                          = "../.."
   engine                          = "aurora-postgresql"
-  port                            = 5432
-  db_parameter_group_name         = "default.aurora-postgresql9.6"
-  db_cluster_parameter_group_name = "default.aurora-postgresql9.6"
-  ...
+  engine-version                  = "9.6.3"
+  name                            = "test-aurora-db-postgres96"
+  envname                         = "test-pg96"
+  envtype                         = "test"
+  subnets                         = ["${module.vpc.private_subnets}"]
+  azs                             = ["${module.vpc.availability_zones}"]
+  replica_count                   = "1"
+  security_groups                 = ["${aws_security_group.allow_all.id}"]
+  instance_type                   = "db.r4.large"
+  username                        = "root"
+  password                        = "changeme"
+  backup_retention_period         = "5"
+  final_snapshot_identifier       = "final-db-snapshot-prod"
+  storage_encrypted               = "true"
+  apply_immediately               = "true"
+  monitoring_interval             = "10"
+  cw_alarms                       = true
+  cw_sns_topic                    = "${aws_sns_topic.db_alarms_postgres96.id}"
+  db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_postgres96_parameter_group.id}"
+  db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_postgres96_parameter_group.id}"
+}
+
+resource "aws_db_parameter_group" "aurora_db_postgres96_parameter_group" {
+  name        = "test-aurora-db-postgres96-parameter-group"
+  family      = "aurora-postgresql9.6"
+  description = "test-aurora-db-postgres96-parameter-group"
+}
+
+resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_group" {
+  name        = "test-aurora-postgres96-cluster-parameter-group"
+  family      = "aurora-postgresql9.6"
+  description = "test-aurora-postgres96-cluster-parameter-group"
 }
 ```
 
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | string | `false` | no |
-| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | string | `true` | no |
-| azs | List of AZs to use | list | - | yes |
-| backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
-| cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `false` | no |
-| cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | string | `500` | no |
-| cw_max_cpu | CPU threshold above which to alarm | string | `85` | no |
-| cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | string | `2000` | no |
-| cw_sns_topic | An SNS topic to publish CloudWatch alarms to | string | `false` | no |
-| db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | string | `default.aurora5.6` | no |
-| db_parameter_group_name | The name of a DB parameter group to use | string | `default.aurora5.6` | no |
-| engine | Aurora database engine type, currently aurora or aurora-postgresql | string | `aurora` | no |
-| envname | Environment name (eg,test, stage or prod) | string | - | yes |
-| envtype | Environment type (eg,prod or nonprod) | string | - | yes |
-| final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |
-| identifier_prefix | Prefix for cluster and instance identifier | string | `` | no |
-| instance_type | Instance type to use | string | `db.t2.small` | no |
-| monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | string | `0` | no |
-| name | Name given to DB subnet group | string | - | yes |
-| password | Master DB password | string | - | yes |
-| port | The port on which to accept connections | string | `3306` | no |
-| preferred_backup_window | When to perform DB backups | string | `02:00-03:00` | no |
-| preferred_maintenance_window | When to perform DB maintenance | string | `sun:05:00-sun:06:00` | no |
-| publicly_accessible | Whether the DB should have a public IP address | string | `false` | no |
-| replica_count | Number of reader nodes to create | string | `0` | no |
-| security_groups | VPC Security Group IDs | list | - | yes |
-| skip_final_snapshot | Should a final snapshot be created on cluster destroy | string | `false` | no |
-| snapshot_identifier | DB snapshot to create this database from | string | `` | no |
-| storage_encrypted | Specifies whether the underlying storage layer should be encrypted | string | `true` | no |
-| subnets | List of subnet IDs to use | list | - | yes |
-| username | Master DB username | string | `root` | no |
+| Name | Description | Default | Required |
+|------|-------------|:-----:|:-----:|
+| apply_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window | `false` | no |
+| auto_minor_version_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window | `true` | no |
+| azs | List of AZs to use | - | yes |
+| backup_retention_period | How long to keep backups for (in days) | `7` | no |
+| cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | `false` | no |
+| cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | `500` | no |
+| cw_max_cpu | CPU threshold above which to alarm | `85` | no |
+| cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | `2000` | no |
+| cw_sns_topic | An SNS topic to publish CloudWatch alarms to | `false` | no |
+| db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | `default.aurora5.6` | no |
+| db_parameter_group_name | The name of a DB parameter group to use | `default.aurora5.6` | no |
+| engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | `aurora` | no |
+| engine-version | Aurora database engine version. | `5.6.10a` | no |
+| envname | Environment name (eg,test, stage or prod) | - | yes |
+| envtype | Environment type (eg,prod or nonprod) | - | yes |
+| final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | `final` | no |
+| identifier_prefix | Prefix for cluster and instance identifier | `` | no |
+| instance_type | Instance type to use | `db.t2.small` | no |
+| monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | `0` | no |
+| name | Name given to DB subnet group | - | yes |
+| password | Master DB password | - | yes |
+| port | The port on which to accept connections | `3306` | no |
+| preferred_backup_window | When to perform DB backups | `02:00-03:00` | no |
+| preferred_maintenance_window | When to perform DB maintenance | `sun:05:00-sun:06:00` | no |
+| publicly_accessible | Whether the DB should have a public IP address | `false` | no |
+| replica_count | Number of reader nodes to create | `0` | no |
+| security_groups | VPC Security Group IDs | - | yes |
+| skip_final_snapshot | Should a final snapshot be created on cluster destroy | `false` | no |
+| snapshot_identifier | DB snapshot to create this database from | `` | no |
+| storage_encrypted | Specifies whether the underlying storage layer should be encrypted | `true` | no |
+| subnets | List of subnet IDs to use | - | yes |
+| username | Master DB username | `root` | no |
 
 ## Outputs
 
