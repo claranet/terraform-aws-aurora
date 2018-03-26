@@ -174,6 +174,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-0", var.identifier_prefix) : format("%s-aurora-node-0", var.envname)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   engine                       = "${var.engine}"
+  engine_version               = "${var.engine-version}"
   instance_class               = "${var.instance_type}"
   publicly_accessible          = "${var.publicly_accessible}"
   db_subnet_group_name         = "${aws_db_subnet_group.main.name}"
@@ -196,6 +197,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
   count                        = "${var.replica_count}"
   engine                       = "${var.engine}"
+  engine_version               = "${var.engine-version}"
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   instance_class               = "${var.instance_type}"
@@ -217,9 +219,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
 
 // Create DB Cluster
 resource "aws_rds_cluster" "default" {
-  cluster_identifier              = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
-  availability_zones              = ["${var.azs}"]
-  engine                          = "${var.engine}"
+  cluster_identifier = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
+  availability_zones = ["${var.azs}"]
+  engine             = "${var.engine}"
+
   engine_version                  = "${var.engine-version}"
   master_username                 = "${var.username}"
   master_password                 = "${var.password}"

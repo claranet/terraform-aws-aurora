@@ -5,7 +5,7 @@ resource "aws_sns_topic" "db_alarms_postgres96" {
 module "aurora_db_postgres96" {
   source                          = "../.."
   engine                          = "aurora-postgresql"
-  engine-version                  = "9.6.3"
+  engine-version                  = "9.6.6"
   name                            = "test-aurora-db-postgres96"
   envname                         = "test-pg96"
   envtype                         = "test"
