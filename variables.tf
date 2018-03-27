@@ -32,7 +32,7 @@ variable "azs" {
 variable "replica_count" {
   type        = "string"
   default     = "0"
-  description = "Number of reader nodes to create"
+  description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
 }
 
 variable "security_groups" {
@@ -180,4 +180,40 @@ variable "engine-version" {
   type        = "string"
   default     = "5.6.10a"
   description = "Aurora database engine version."
+}
+
+variable "replica_scale_enabled" {
+  type        = "string"
+  default     = false
+  description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas"
+}
+
+variable "replica_scale_max" {
+  type        = "string"
+  default     = "0"
+  description = "Maximum number of replicas to allow scaling for"
+}
+
+variable "replica_scale_min" {
+  type        = "string"
+  default     = "2"
+  description = "Maximum number of replicas to allow scaling for"
+}
+
+variable "replica_scale_cpu" {
+  type        = "string"
+  default     = "70"
+  description = "CPU usage to trigger autoscaling at"
+}
+
+variable "replica_scale_in_cooldown" {
+  type        = "string"
+  default     = "300"
+  description = "Cooldown in seconds before allowing further scaling operations after a scale in"
+}
+
+variable "replica_scale_out_cooldown" {
+  type        = "string"
+  default     = "300"
+  description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
