@@ -10,7 +10,7 @@
   *  - An Aurora DB instance + 'n' number of additional instances
   *  - Optionally RDS 'Enhanced Monitoring' + associated required IAM role/policy (by simply setting the `monitoring_interval` param to > `0`
   *  - Optionally sensible alarms to SNS (high CPU, high connections, slow replication)
-  *
+  *  - Optionally configure autoscaling for read replicas (MySQL clusters only)
   *
   * ## Contributing
   *
@@ -24,6 +24,9 @@
   * *It is recommended you always create a parameter group, even if it exactly matches the defaults.*
   * Changing the parameter group in use requires a restart of the DB cluster, modifying parameters within a group
   * may not (depending on the parameter being altered)
+  *
+  * ## Known issues
+  * AWS doesn't automatically remove RDS instances created from autoscaling when you remove the autoscaling rules and this can cause issues when using Terraform to destroy the cluster.  To work around this, you should make sure there are no automatically created RDS instances running before attempting to destroy a cluster.
   *
   * ### Aurora 1.x (MySQL 5.6)
   *
@@ -195,7 +198,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
 // Create 'n' number of additional DB instance(s) in same cluster
 resource "aws_rds_cluster_instance" "cluster_instance_n" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
-  count                        = "${var.replica_count}"
+  count                        = "${var.replica_scale_enabled ? var.replica_scale_min : var.replica_count}"
   engine                       = "${var.engine}"
   engine_version               = "${var.engine-version}"
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
@@ -271,4 +274,34 @@ resource "aws_iam_role_policy_attachment" "rds-enhanced-monitoring-policy-attach
   count      = "${var.monitoring_interval > 0 ? 1 : 0}"
   role       = "${aws_iam_role.rds-enhanced-monitoring.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
+// Autoscaling
+resource "aws_appautoscaling_target" "autoscaling" {
+  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  max_capacity       = "${var.replica_scale_max}"
+  min_capacity       = "${var.replica_scale_min}"
+  resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
+  scalable_dimension = "rds:cluster:ReadReplicaCount"
+  service_namespace  = "rds"
+}
+
+resource "aws_appautoscaling_policy" "autoscaling" {
+  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  depends_on         = ["aws_appautoscaling_target.autoscaling"]
+  name               = "target-metric"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
+  scalable_dimension = "rds:cluster:ReadReplicaCount"
+  service_namespace  = "rds"
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "RDSReaderAverageCPUUtilization"
+    }
+
+    scale_in_cooldown  = "${var.replica_scale_in_cooldown}"
+    scale_out_cooldown = "${var.replica_scale_out_cooldown}"
+    target_value       = "${var.replica_scale_cpu}"
+  }
 }
