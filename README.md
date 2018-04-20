@@ -29,7 +29,7 @@ AWS doesn't automatically remove RDS instances created from autoscaling when you
 
 ### Aurora 1.x (MySQL 5.6)
 
-
+```
 resource "aws_sns_topic" "db_alarms_56" {
   name = "aurora-db-alarms-56"
 }
@@ -68,6 +68,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_56_parameter_group" {
   family      = "aurora5.6"
   description = "test-aurora-56-cluster-parameter-group"
 }
+```
 
 ### Aurora 2.x (MySQL 5.7)
 
