@@ -116,6 +116,12 @@ variable "auto_minor_version_upgrade" {
   description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window"
 }
 
+variable "iam_database_authentication_enabled" {
+  type        = "string"
+  default     = "false"
+  description = "Determines whether IAM authentication is enabled for the cluster"
+}
+
 variable "db_parameter_group_name" {
   type        = "string"
   default     = "default.aurora5.6"

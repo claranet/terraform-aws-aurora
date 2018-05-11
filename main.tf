@@ -36,26 +36,27 @@
   * }
   * 
   * module "aurora_db_56" {
-  *   source                          = "../.."
-  *   name                            = "test-aurora-db-56"
-  *   envname                         = "test56"
-  *   envtype                         = "test"
-  *   subnets                         = ["${module.vpc.private_subnets}"]
-  *   azs                             = ["${module.vpc.availability_zones}"]
-  *   replica_count                   = "1"
-  *   security_groups                 = ["${aws_security_group.allow_all.id}"]
-  *   instance_type                   = "db.t2.medium"
-  *   username                        = "root"
-  *   password                        = "changeme"
-  *   backup_retention_period         = "5"
-  *   final_snapshot_identifier       = "final-db-snapshot-prod"
-  *   storage_encrypted               = "true"
-  *   apply_immediately               = "true"
-  *   monitoring_interval             = "10"
-  *   cw_alarms                       = true
-  *   cw_sns_topic                    = "${aws_sns_topic.db_alarms_56.id}"
-  *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
-  *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
+  *   source                              = "../.."
+  *   name                                = "test-aurora-db-56"
+  *   envname                             = "test56"
+  *   envtype                             = "test"
+  *   subnets                             = ["${module.vpc.private_subnets}"]
+  *   azs                                 = ["${module.vpc.availability_zones}"]
+  *   replica_count                       = "1"
+  *   security_groups                     = ["${aws_security_group.allow_all.id}"]
+  *   instance_type                       = "db.t2.medium"
+  *   username                            = "root"
+  *   password                            = "changeme"
+  *   backup_retention_period             = "5"
+  *   iam_database_authentication_enabled = "true"
+  *   final_snapshot_identifier           = "final-db-snapshot-prod"
+  *   storage_encrypted                   = "true"
+  *   apply_immediately                   = "true"
+  *   monitoring_interval                 = "10"
+  *   cw_alarms                           = true
+  *   cw_sns_topic                        = "${aws_sns_topic.db_alarms_56.id}"
+  *   db_parameter_group_name             = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
+  *   db_cluster_parameter_group_name     = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
   * }
   * 
   * resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
@@ -226,21 +227,22 @@ resource "aws_rds_cluster" "default" {
   availability_zones = ["${var.azs}"]
   engine             = "${var.engine}"
 
-  engine_version                  = "${var.engine-version}"
-  master_username                 = "${var.username}"
-  master_password                 = "${var.password}"
-  final_snapshot_identifier       = "${var.final_snapshot_identifier}-${random_id.server.hex}"
-  skip_final_snapshot             = "${var.skip_final_snapshot}"
-  backup_retention_period         = "${var.backup_retention_period}"
-  preferred_backup_window         = "${var.preferred_backup_window}"
-  preferred_maintenance_window    = "${var.preferred_maintenance_window}"
-  port                            = "${var.port}"
-  db_subnet_group_name            = "${aws_db_subnet_group.main.name}"
-  vpc_security_group_ids          = ["${var.security_groups}"]
-  snapshot_identifier             = "${var.snapshot_identifier}"
-  storage_encrypted               = "${var.storage_encrypted}"
-  apply_immediately               = "${var.apply_immediately}"
-  db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
+  engine_version                      = "${var.engine-version}"
+  master_username                     = "${var.username}"
+  master_password                     = "${var.password}"
+  final_snapshot_identifier           = "${var.final_snapshot_identifier}-${random_id.server.hex}"
+  iam_database_authentication_enabled = "${var.iam_database_authentication_enabled}"
+  skip_final_snapshot                 = "${var.skip_final_snapshot}"
+  backup_retention_period             = "${var.backup_retention_period}"
+  preferred_backup_window             = "${var.preferred_backup_window}"
+  preferred_maintenance_window        = "${var.preferred_maintenance_window}"
+  port                                = "${var.port}"
+  db_subnet_group_name                = "${aws_db_subnet_group.main.name}"
+  vpc_security_group_ids              = ["${var.security_groups}"]
+  snapshot_identifier                 = "${var.snapshot_identifier}"
+  storage_encrypted                   = "${var.storage_encrypted}"
+  apply_immediately                   = "${var.apply_immediately}"
+  db_cluster_parameter_group_name     = "${var.db_cluster_parameter_group_name}"
 }
 
 // Geneate an ID when an environment is initialised
