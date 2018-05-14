@@ -226,6 +226,7 @@ resource "aws_rds_cluster" "default" {
   availability_zones = ["${var.azs}"]
   engine             = "${var.engine}"
 
+  database_name                   = "${var.database_name}"
   engine_version                  = "${var.engine-version}"
   master_username                 = "${var.username}"
   master_password                 = "${var.password}"
