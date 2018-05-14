@@ -186,6 +186,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | name | Name given to DB subnet group | string | - | yes |
 | password | Master DB password | string | - | yes |
 | port | The port on which to accept connections | string | `3306` | no |
+| database_name | The database name to create | string |  | no |
 | preferred_backup_window | When to perform DB backups | string | `02:00-03:00` | no |
 | preferred_maintenance_window | When to perform DB maintenance | string | `sun:05:00-sun:06:00` | no |
 | publicly_accessible | Whether the DB should have a public IP address | string | `false` | no |

@@ -217,3 +217,9 @@ variable "replica_scale_out_cooldown" {
   default     = "300"
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
+
+variable "database_name" {
+  type        = "string"
+  description = "Name given to DB"
+  default     = ""
+}
