@@ -8,19 +8,8 @@ variable "subnets" {
   description = "List of subnet IDs to use"
 }
 
-variable "envname" {
-  type        = "string"
-  description = "Environment name (eg,test, stage or prod)"
-}
-
-variable "envtype" {
-  type        = "string"
-  description = "Environment type (eg,prod or nonprod)"
-}
-
 variable "identifier_prefix" {
   type        = "string"
-  default     = ""
   description = "Prefix for cluster and instance identifier"
 }
 
@@ -216,4 +205,10 @@ variable "replica_scale_out_cooldown" {
   type        = "string"
   default     = "300"
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
+}
+
+variable "tags" {
+  description = "A mapping of tags to assign to the resource"
+  default     = {}
+  type        = "map"
 }
