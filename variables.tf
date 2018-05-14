@@ -27,6 +27,7 @@ variable "identifier_prefix" {
 variable "azs" {
   type        = "list"
   description = "List of AZs to use"
+  default     = []
 }
 
 variable "replica_count" {
