@@ -7,8 +7,6 @@ module "aurora_db_57_autoscaling" {
   engine                          = "aurora-mysql"
   engine-version                  = "5.7.12"
   name                            = "test-aurora-db-57-autoscaling"
-  envname                         = "test-57-autoscaling"
-  envtype                         = "test"
   subnets                         = ["${module.vpc.private_subnets}"]
   azs                             = ["${module.vpc.availability_zones}"]
   security_groups                 = ["${aws_security_group.allow_all.id}"]
@@ -30,6 +28,10 @@ module "aurora_db_57_autoscaling" {
   replica_scale_cpu               = "70"
   replica_scale_in_cooldown       = "300"
   replica_scale_out_cooldown      = "300"
+  tags = {
+    envname                       = "test-57-autoscaling"
+    envtype                       = "test"
+  }
 }
 
 resource "aws_db_parameter_group" "aurora_db_57_autoscaling_parameter_group" {

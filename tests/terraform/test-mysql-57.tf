@@ -7,8 +7,6 @@ module "aurora_db_57" {
   engine                          = "aurora-mysql"
   engine-version                  = "5.7.12"
   name                            = "test-aurora-db-57"
-  envname                         = "test-57"
-  envtype                         = "test"
   subnets                         = ["${module.vpc.private_subnets}"]
   azs                             = ["${module.vpc.availability_zones}"]
   replica_count                   = "1"
@@ -25,6 +23,10 @@ module "aurora_db_57" {
   cw_sns_topic                    = "${aws_sns_topic.db_alarms.id}"
   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_57_parameter_group.id}"
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_57_cluster_parameter_group.id}"
+  tags = {
+    envname                       = "test-57"
+    envtype                       = "test"
+  }
 }
 
 resource "aws_db_parameter_group" "aurora_db_57_parameter_group" {

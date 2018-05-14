@@ -37,8 +37,6 @@ resource "aws_sns_topic" "db_alarms_56" {
 module "aurora_db_56" {
   source                          = "claranet/aurora/aws"
   name                            = "test-aurora-db-56"
-  envname                         = "test56"
-  envtype                         = "test"
   subnets                         = ["${module.vpc.private_subnets}"]
   azs                             = ["${module.vpc.availability_zones}"]
   replica_count                   = "1"
@@ -55,6 +53,10 @@ module "aurora_db_56" {
   cw_sns_topic                    = "${aws_sns_topic.db_alarms_56.id}"
   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
+  tags = {
+    envname                       = "test56"
+    envtype                       = "test"
+  }
 }
 
 resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
@@ -82,8 +84,6 @@ module "aurora_db_57" {
   engine                          = "aurora-mysql"
   engine-version                  = "5.7.12"
   name                            = "test-aurora-db-57"
-  envname                         = "test-57"
-  envtype                         = "test"
   subnets                         = ["${module.vpc.private_subnets}"]
   azs                             = ["${module.vpc.availability_zones}"]
   replica_count                   = "1"
@@ -100,6 +100,10 @@ module "aurora_db_57" {
   cw_sns_topic                    = "${aws_sns_topic.db_alarms.id}"
   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_57_parameter_group.id}"
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_57_cluster_parameter_group.id}"
+  tags = {
+    envname                       = "test-57"
+    envtype                       = "test"
+  }
 }
 
 resource "aws_db_parameter_group" "aurora_db_57_parameter_group" {
@@ -126,8 +130,6 @@ module "aurora_db_postgres96" {
   engine                          = "aurora-postgresql"
   engine-version                  = "9.6.3"
   name                            = "test-aurora-db-postgres96"
-  envname                         = "test-pg96"
-  envtype                         = "test"
   subnets                         = ["${module.vpc.private_subnets}"]
   azs                             = ["${module.vpc.availability_zones}"]
   replica_count                   = "1"
@@ -144,6 +146,10 @@ module "aurora_db_postgres96" {
   cw_sns_topic                    = "${aws_sns_topic.db_alarms_postgres96.id}"
   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_postgres96_parameter_group.id}"
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_postgres96_parameter_group.id}"
+  tags = {
+    envname                       = "test-pg96"
+    envtype                       = "test"
+  }
 }
 
 resource "aws_db_parameter_group" "aurora_db_postgres96_parameter_group" {
@@ -177,8 +183,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | db_parameter_group_name | The name of a DB parameter group to use | string | `default.aurora5.6` | no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | string | `aurora` | no |
 | engine-version | Aurora database engine version. | string | `5.6.10a` | no |
-| envname | Environment name (eg,test, stage or prod) | string | - | yes |
-| envtype | Environment type (eg,prod or nonprod) | string | - | yes |
+| tags | Tags to attach to resources | map | - | no |
 | final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |
 | identifier_prefix | Prefix for cluster and instance identifier | string | `` | no |
 | instance_type | Instance type to use | string | `db.t2.small` | no |
