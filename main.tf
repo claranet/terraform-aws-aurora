@@ -220,6 +220,32 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   }
 }
 
+// Conditionally create a large "DB restoration instance" which can restore in less time than normal instances can
+
+resource "aws_rds_cluster_instance" "cluster_instance_restore" {
+  depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
+  count                        = "${var.restore_instance_enabled ? 1 : 0 }"
+  engine                       = "${var.engine}"
+  engine_version               = "${var.engine-version}"
+  identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
+  cluster_identifier           = "${aws_rds_cluster.default.id}"
+  instance_class               = "${var.restore_instance_type}"
+  publicly_accessible          = "${var.publicly_accessible}"
+  db_subnet_group_name         = "${aws_db_subnet_group.main.name}"
+  db_parameter_group_name      = "${var.db_parameter_group_name}"
+  preferred_maintenance_window = "${var.preferred_maintenance_window}"
+  apply_immediately            = "${var.apply_immediately}"
+  monitoring_role_arn          = "${join("", aws_iam_role.rds-enhanced-monitoring.*.arn)}"
+  monitoring_interval          = "${var.monitoring_interval}"
+  auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
+  promotion_tier               = "${count.index + 1}"
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
+}
+
 // Create DB Cluster
 resource "aws_rds_cluster" "default" {
   cluster_identifier = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
