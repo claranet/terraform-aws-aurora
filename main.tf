@@ -227,7 +227,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_restore" {
   count                        = "${var.restore_instance_enabled ? 1 : 0 }"
   engine                       = "${var.engine}"
   engine_version               = "${var.engine-version}"
-  identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
+  identifier                   = "${var.identifier_prefix != "" ? format("%s-restore-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   instance_class               = "${var.restore_instance_type}"
   publicly_accessible          = "${var.publicly_accessible}"
