@@ -12,3 +12,8 @@ output "all_instance_endpoints_list" {
 output "reader_endpoint" {
   value = "${aws_rds_cluster.default.reader_endpoint}"
 }
+
+// Values used for linking other terraform instances to this module
+output "cluster_id" {
+  value = "${aws_rds_cluster.cluster_identifier}"
+}
