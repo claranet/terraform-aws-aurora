@@ -222,14 +222,14 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
 
 // Conditionally create a large "DB restoration instance" which can restore in less time than normal instances can
 
-resource "aws_rds_cluster_instance" "cluster_instance_restore" {
+resource "aws_rds_cluster_instance" "cluster_instance_maintenance" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
-  count                        = "${var.restore_instance_enabled ? 1 : 0 }"
+  count                        = "${var.maintenance_instance_enabled ? 1 : 0 }"
   engine                       = "${var.engine}"
   engine_version               = "${var.engine-version}"
-  identifier                   = "${var.identifier_prefix != "" ? format("%s-restore-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
+  identifier                   = "${var.identifier_prefix != "" ? format("%s-maint-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
-  instance_class               = "${var.restore_instance_type}"
+  instance_class               = "${var.maintenance_instance_type}"
   publicly_accessible          = "${var.publicly_accessible}"
   db_subnet_group_name         = "${aws_db_subnet_group.main.name}"
   db_parameter_group_name      = "${var.db_parameter_group_name}"

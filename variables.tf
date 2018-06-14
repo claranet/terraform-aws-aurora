@@ -218,14 +218,14 @@ variable "replica_scale_out_cooldown" {
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
 
-variable "restore_instance_enabled" {
+variable "maintenance_instance_enabled" {
   type        = "string"
   default     = false
-  description = "Whether to create a very large instance with high CPU and IOPS for fast database restore (default false)"
+  description = "Whether to create a very large instance with high CPU and IOPS for fast database maintenance tasks (default false)"
 }
 
-variable "restore_instance_type" {
+variable "maintenance_instance_type" {
   type        = "string"
   default     = "db.r4.xlarge"                                                                                         // to prevent costly accidents!  set this to the real value when needed
-  description = "Instance type for large DB restoration instances - set to something like db.r4.16xlarge when needed!"
+  description = "Instance type for large DB maintenance instances - set to something like db.r4.16xlarge when needed!"
 }
