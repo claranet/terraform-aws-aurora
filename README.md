@@ -185,6 +185,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | string | `0` | no |
 | name | Name given to DB subnet group | string | - | yes |
 | password | Master DB password | string | - | yes |
+| performance_insights_enabled | Whether to enable Performance Insights | string | `false` | no |
 | port | The port on which to accept connections | string | `3306` | no |
 | preferred_backup_window | When to perform DB backups | string | `02:00-03:00` | no |
 | preferred_maintenance_window | When to perform DB maintenance | string | `sun:05:00-sun:06:00` | no |

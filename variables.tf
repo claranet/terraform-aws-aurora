@@ -217,3 +217,9 @@ variable "replica_scale_out_cooldown" {
   default     = "300"
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
 }
+
+variable "performance_insights_enabled" {
+  type        = "string"
+  default     = false
+  description = "Whether to enable Performance Insights"
+}

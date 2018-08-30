@@ -188,6 +188,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   monitoring_interval          = "${var.monitoring_interval}"
   auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
   promotion_tier               = "0"
+  performance_insights_enabled = "${var.performance_insights_enabled}"
 
   tags {
     envname = "${var.envname}"
@@ -213,6 +214,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   monitoring_interval          = "${var.monitoring_interval}"
   auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
   promotion_tier               = "${count.index + 1}"
+  performance_insights_enabled = "${var.performance_insights_enabled}"
 
   tags {
     envname = "${var.envname}"
