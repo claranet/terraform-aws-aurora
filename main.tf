@@ -133,6 +133,7 @@
   *   replica_count                   = "1"
   *   security_groups                 = ["${aws_security_group.allow_all.id}"]
   *   instance_type                   = "db.r4.large"
+  *   port                            = "5432"
   *   username                        = "root"
   *   password                        = "changeme"
   *   backup_retention_period         = "5"
