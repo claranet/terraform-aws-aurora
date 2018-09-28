@@ -223,3 +223,9 @@ variable "performance_insights_enabled" {
   default     = false
   description = "Whether to enable Performance Insights"
 }
+
+variable "enhanced_monitoring_role_name" {
+  description = "The name to use when creating the enhanced monitoring IAM role."
+  type        = "string"
+  default     = ""
+}
