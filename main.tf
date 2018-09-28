@@ -174,6 +174,10 @@ resource "aws_db_subnet_group" "main" {
 
 // Create single DB instance
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
+  depends_on = [
+    "aws_iam_role_policy_attachment.rds-enhanced-monitoring-policy-attach",
+  ]
+
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-0", var.identifier_prefix) : format("%s-aurora-node-0", var.envname)}"
   cluster_identifier           = "${aws_rds_cluster.default.id}"
   engine                       = "${var.engine}"
