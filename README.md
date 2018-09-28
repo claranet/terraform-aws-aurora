@@ -27,6 +27,10 @@ may not (depending on the parameter being altered)
 ## Known issues
 AWS doesn't automatically remove RDS instances created from autoscaling when you remove the autoscaling rules and this can cause issues when using Terraform to destroy the cluster.  To work around this, you should make sure there are no automatically created RDS instances running before attempting to destroy a cluster.
 
+## Breaking changes
+
+* As of version 3.0.0 of the module the rds-enhanced-monitoring role is now named using a name_prefix instead of a name. This will result in the role being recreated with a new name when you update to it.
+
 ### Aurora 1.x (MySQL 5.6)
 
 ```
