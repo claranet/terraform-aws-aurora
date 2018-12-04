@@ -248,6 +248,7 @@ resource "aws_rds_cluster" "default" {
   kms_key_id                      = "${var.kms_key_id}"
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
+  deletion_protection             = "${var.deletion_protection}"
 }
 
 // Geneate an ID when an environment is initialised
