@@ -245,6 +245,7 @@ resource "aws_rds_cluster" "default" {
   vpc_security_group_ids          = ["${var.security_groups}"]
   snapshot_identifier             = "${var.snapshot_identifier}"
   storage_encrypted               = "${var.storage_encrypted}"
+  kms_key_id                      = "${var.kms_key_id}"
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
 }
