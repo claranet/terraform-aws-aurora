@@ -33,7 +33,7 @@ AWS doesn't automatically remove RDS instances created from autoscaling when you
 
 ### Aurora 1.x (MySQL 5.6)
 
-```
+```hcl
 resource "aws_sns_topic" "db_alarms_56" {
   name = "aurora-db-alarms-56"
 }
@@ -184,6 +184,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | envname | Environment name (eg,test, stage or prod) | string | - | yes |
 | envtype | Environment type (eg,prod or nonprod) | string | - | yes |
 | final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |
+| iam_database_authentication_enabled | Whether to enable IAM database authentication for the RDS Cluster | string | `false` | no |
 | identifier_prefix | Prefix for cluster and instance identifier | string | `` | no |
 | instance_type | Instance type to use | string | `db.t2.small` | no |
 | monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | string | `0` | no |

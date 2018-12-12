@@ -223,3 +223,9 @@ variable "performance_insights_enabled" {
   default     = false
   description = "Whether to enable Performance Insights"
 }
+
+variable "iam_database_authentication_enabled" {
+  type        = "string"
+  default     = false
+  description = "Whether to enable IAM database authentication for the RDS Cluster"
+}

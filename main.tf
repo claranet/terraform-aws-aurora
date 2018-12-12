@@ -232,21 +232,22 @@ resource "aws_rds_cluster" "default" {
   availability_zones = ["${var.azs}"]
   engine             = "${var.engine}"
 
-  engine_version                  = "${var.engine-version}"
-  master_username                 = "${var.username}"
-  master_password                 = "${var.password}"
-  final_snapshot_identifier       = "${var.final_snapshot_identifier}-${random_id.server.hex}"
-  skip_final_snapshot             = "${var.skip_final_snapshot}"
-  backup_retention_period         = "${var.backup_retention_period}"
-  preferred_backup_window         = "${var.preferred_backup_window}"
-  preferred_maintenance_window    = "${var.preferred_maintenance_window}"
-  port                            = "${var.port}"
-  db_subnet_group_name            = "${aws_db_subnet_group.main.name}"
-  vpc_security_group_ids          = ["${var.security_groups}"]
-  snapshot_identifier             = "${var.snapshot_identifier}"
-  storage_encrypted               = "${var.storage_encrypted}"
-  apply_immediately               = "${var.apply_immediately}"
-  db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
+  engine_version                      = "${var.engine-version}"
+  master_username                     = "${var.username}"
+  master_password                     = "${var.password}"
+  final_snapshot_identifier           = "${var.final_snapshot_identifier}-${random_id.server.hex}"
+  skip_final_snapshot                 = "${var.skip_final_snapshot}"
+  backup_retention_period             = "${var.backup_retention_period}"
+  preferred_backup_window             = "${var.preferred_backup_window}"
+  preferred_maintenance_window        = "${var.preferred_maintenance_window}"
+  port                                = "${var.port}"
+  db_subnet_group_name                = "${aws_db_subnet_group.main.name}"
+  vpc_security_group_ids              = ["${var.security_groups}"]
+  snapshot_identifier                 = "${var.snapshot_identifier}"
+  storage_encrypted                   = "${var.storage_encrypted}"
+  apply_immediately                   = "${var.apply_immediately}"
+  db_cluster_parameter_group_name     = "${var.db_cluster_parameter_group_name}"
+  iam_database_authentication_enabled = "${var.iam_database_authentication_enabled}"
 }
 
 // Geneate an ID when an environment is initialised
@@ -272,7 +273,7 @@ data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
 
 resource "aws_iam_role" "rds-enhanced-monitoring" {
   count              = "${var.monitoring_interval > 0 ? 1 : 0}"
-  name_prefix        = "rds-enhanced-monitoring-${var.envname}-"
+  name_prefix        = "rds-enhanced-mon-${var.envname}-"
   assume_role_policy = "${data.aws_iam_policy_document.monitoring-rds-assume-role-policy.json}"
 }
 
