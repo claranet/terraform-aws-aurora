@@ -12,3 +12,8 @@ output "all_instance_endpoints_list" {
 output "reader_endpoint" {
   value = "${aws_rds_cluster.default.reader_endpoint}"
 }
+
+// The ID of the RDS Cluster
+output "cluster_identifier" {
+  value = "${aws_rds_cluster.default.id}"
+}
