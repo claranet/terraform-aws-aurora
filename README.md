@@ -173,6 +173,9 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | azs | List of AZs to use | list | - | yes |
 | backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
 | cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `false` | no |
+| cw_eval_period_connections | Evaluation period for the DB connections alarms | string | `1` | no |
+| cw_eval_period_cpu | Evaluation period for the DB CPU alarms | string | `2` | no |
+| cw_eval_period_replica_lag | Evaluation period for the DB replica lag alarm | string | `5` | no |
 | cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | string | `500` | no |
 | cw_max_cpu | CPU threshold above which to alarm | string | `85` | no |
 | cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | string | `2000` | no |
