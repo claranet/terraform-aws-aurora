@@ -128,6 +128,12 @@ variable "db_cluster_parameter_group_name" {
   description = "The name of a DB Cluster parameter group to use"
 }
 
+variable "deletion_protection" {
+  type        = "string"
+  default     = "false"
+  description = "If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to true. The default is false."
+}
+
 variable "snapshot_identifier" {
   type        = "string"
   default     = ""
@@ -138,6 +144,12 @@ variable "storage_encrypted" {
   type        = "string"
   default     = "true"
   description = "Specifies whether the underlying storage layer should be encrypted"
+}
+
+variable "kms_key_id" {
+  type        = "string"
+  default     = ""
+  description = "The ARN for the KMS encryption key. When specifying kms_key_id, storage_encrypted needs to be set to true"
 }
 
 variable "cw_alarms" {
