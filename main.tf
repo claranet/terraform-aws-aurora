@@ -277,20 +277,20 @@ data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
 }
 
 resource "aws_iam_role" "rds-enhanced-monitoring" {
-  count              = "${var.monitoring_interval > 0 ? 1 : 0}"
+  count              = "${var.enabled && var.monitoring_interval > 0 ? 1 : 0}"
   name_prefix        = "rds-enhanced-mon-${var.envname}-"
   assume_role_policy = "${data.aws_iam_policy_document.monitoring-rds-assume-role-policy.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "rds-enhanced-monitoring-policy-attach" {
-  count      = "${var.monitoring_interval > 0 ? 1 : 0}"
+  count      = "${var.enabled && var.monitoring_interval > 0 ? 1 : 0}"
   role       = "${aws_iam_role.rds-enhanced-monitoring.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
 // Autoscaling
 resource "aws_appautoscaling_target" "autoscaling" {
-  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  count              = "${var.enabled && var.replica_scale_enabled ? 1 : 0}"
   max_capacity       = "${var.replica_scale_max}"
   min_capacity       = "${var.replica_scale_min}"
   resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
@@ -299,7 +299,7 @@ resource "aws_appautoscaling_target" "autoscaling" {
 }
 
 resource "aws_appautoscaling_policy" "autoscaling" {
-  count              = "${var.replica_scale_enabled ? 1 : 0}"
+  count              = "${var.enabled && var.replica_scale_enabled ? 1 : 0}"
   depends_on         = ["aws_appautoscaling_target.autoscaling"]
   name               = "target-metric"
   policy_type        = "TargetTrackingScaling"
