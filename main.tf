@@ -162,6 +162,7 @@
 
 // DB Subnet Group creation
 resource "aws_db_subnet_group" "main" {
+  count       = "${var.enabled ? 1 : 0}"
   name        = "${var.name}"
   description = "Group of DB subnets"
   subnet_ids  = ["${var.subnets}"]
@@ -174,6 +175,7 @@ resource "aws_db_subnet_group" "main" {
 
 // Create single DB instance
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
+  count      = "${var.enabled ? 1 : 0}"
   depends_on = [
     "aws_iam_role_policy_attachment.rds-enhanced-monitoring-policy-attach",
   ]
@@ -203,7 +205,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
 // Create 'n' number of additional DB instance(s) in same cluster
 resource "aws_rds_cluster_instance" "cluster_instance_n" {
   depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
-  count                        = "${var.replica_scale_enabled ? var.replica_scale_min : var.replica_count}"
+  count                        = "${var.enabled ? var.replica_scale_enabled ? var.replica_scale_min : var.replica_count : 0}"
   engine                       = "${var.engine}"
   engine_version               = "${var.engine-version}"
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-%d", var.identifier_prefix, count.index + 1) : format("%s-aurora-node-%d", var.envname, count.index + 1)}"
@@ -228,6 +230,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
 
 // Create DB Cluster
 resource "aws_rds_cluster" "default" {
+  count              = "${var.enabled ? 1 : 0}"
   cluster_identifier = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
   availability_zones = ["${var.azs}"]
   engine             = "${var.engine}"
@@ -252,6 +255,7 @@ resource "aws_rds_cluster" "default" {
 
 // Geneate an ID when an environment is initialised
 resource "random_id" "server" {
+  count   = "${var.enabled ? 1 : 0}"
   keepers = {
     id = "${aws_db_subnet_group.main.name}"
   }
@@ -261,6 +265,7 @@ resource "random_id" "server" {
 
 // IAM Role + Policy attach for Enhanced Monitoring
 data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
+  count = "${var.enabled ? 1 : 0}"
   statement {
     actions = ["sts:AssumeRole"]
 

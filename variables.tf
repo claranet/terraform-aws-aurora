@@ -247,3 +247,9 @@ variable "iam_database_authentication_enabled" {
   default     = false
   description = "Whether to enable IAM database authentication for the RDS Cluster"
 }
+
+variable "enabled" {
+  type        = "string"
+  default     = true
+  description = "Whether the database resources should be created"
+}
