@@ -160,6 +160,13 @@
   * ```
   */
 
+locals {
+  default_tags = {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
+}
+
 // DB Subnet Group creation
 resource "aws_db_subnet_group" "main" {
   count       = "${var.enabled ? 1 : 0}"
@@ -167,15 +174,13 @@ resource "aws_db_subnet_group" "main" {
   description = "Group of DB subnets"
   subnet_ids  = ["${var.subnets}"]
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
-  }
+  tags = "${merge("${local.default_tags}","${var.tags}")}"
 }
 
 // Create single DB instance
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
-  count      = "${var.enabled ? 1 : 0}"
+  count = "${var.enabled ? 1 : 0}"
+
   depends_on = [
     "aws_iam_role_policy_attachment.rds-enhanced-monitoring-policy-attach",
   ]
@@ -196,10 +201,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   promotion_tier               = "0"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
-  }
+  tags = "${merge("${local.default_tags}","${var.tags}")}"
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -222,10 +224,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   promotion_tier               = "${count.index + 1}"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
-  }
+  tags = "${merge("${local.default_tags}","${var.tags}")}"
 }
 
 // Create DB Cluster
@@ -251,11 +250,14 @@ resource "aws_rds_cluster" "default" {
   apply_immediately                   = "${var.apply_immediately}"
   db_cluster_parameter_group_name     = "${var.db_cluster_parameter_group_name}"
   iam_database_authentication_enabled = "${var.iam_database_authentication_enabled}"
+
+  tags = "${merge("${local.default_tags}","${var.tags}")}"
 }
 
 // Geneate an ID when an environment is initialised
 resource "random_id" "server" {
-  count   = "${var.enabled ? 1 : 0}"
+  count = "${var.enabled ? 1 : 0}"
+
   keepers = {
     id = "${aws_db_subnet_group.main.name}"
   }
@@ -266,6 +268,7 @@ resource "random_id" "server" {
 // IAM Role + Policy attach for Enhanced Monitoring
 data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
   count = "${var.enabled ? 1 : 0}"
+
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -280,6 +283,7 @@ resource "aws_iam_role" "rds-enhanced-monitoring" {
   count              = "${var.enabled && var.monitoring_interval > 0 ? 1 : 0}"
   name_prefix        = "rds-enhanced-mon-${var.envname}-"
   assume_role_policy = "${data.aws_iam_policy_document.monitoring-rds-assume-role-policy.json}"
+  tags               = "${merge("${local.default_tags}","${var.tags}")}"
 }
 
 resource "aws_iam_role_policy_attachment" "rds-enhanced-monitoring-policy-attach" {
