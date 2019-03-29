@@ -253,3 +253,9 @@ variable "enabled" {
   default     = true
   description = "Whether the database resources should be created"
 }
+
+variable "tags" {
+  type        = "map"
+  description = "Map of tags to apply to RDS cluster and resources"
+  default     = {}
+}
