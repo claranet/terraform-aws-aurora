@@ -175,7 +175,8 @@ resource "aws_db_subnet_group" "main" {
 
 // Create single DB instance
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
-  count      = "${var.enabled ? 1 : 0}"
+  count = "${var.enabled ? 1 : 0}"
+
   depends_on = [
     "aws_iam_role_policy_attachment.rds-enhanced-monitoring-policy-attach",
   ]
@@ -253,11 +254,12 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name     = "${var.db_cluster_parameter_group_name}"
   iam_database_authentication_enabled = "${var.iam_database_authentication_enabled}"
   deletion_protection                 = "${var.deletion_protection}"
-
+}
 
 // Geneate an ID when an environment is initialised
 resource "random_id" "server" {
-  count   = "${var.enabled ? 1 : 0}"
+  count = "${var.enabled ? 1 : 0}"
+
   keepers = {
     id = "${aws_db_subnet_group.main.name}"
   }
@@ -268,6 +270,7 @@ resource "random_id" "server" {
 // IAM Role + Policy attach for Enhanced Monitoring
 data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
   count = "${var.enabled ? 1 : 0}"
+
   statement {
     actions = ["sts:AssumeRole"]
 
