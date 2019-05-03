@@ -33,7 +33,7 @@ AWS doesn't automatically remove RDS instances created from autoscaling when you
 
 ### Aurora 1.x (MySQL 5.6)
 
-```
+```hcl
 resource "aws_sns_topic" "db_alarms_56" {
   name = "aurora-db-alarms-56"
 }
@@ -173,17 +173,22 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | azs | List of AZs to use | list | - | yes |
 | backup_retention_period | How long to keep backups for (in days) | string | `7` | no |
 | cw_alarms | Whether to enable CloudWatch alarms - requires `cw_sns_topic` is specified | string | `false` | no |
+| cw_eval_period_connections | Evaluation period for the DB connections alarms | string | `1` | no |
+| cw_eval_period_cpu | Evaluation period for the DB CPU alarms | string | `2` | no |
+| cw_eval_period_replica_lag | Evaluation period for the DB replica lag alarm | string | `5` | no |
 | cw_max_conns | Connection count beyond which to trigger a CloudWatch alarm | string | `500` | no |
 | cw_max_cpu | CPU threshold above which to alarm | string | `85` | no |
 | cw_max_replica_lag | Maximum Aurora replica lag in milliseconds above which to alarm | string | `2000` | no |
 | cw_sns_topic | An SNS topic to publish CloudWatch alarms to | string | `false` | no |
 | db_cluster_parameter_group_name | The name of a DB Cluster parameter group to use | string | `default.aurora5.6` | no |
 | db_parameter_group_name | The name of a DB parameter group to use | string | `default.aurora5.6` | no |
+| enabled | Whether the database resources should be created | string | `true`| no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | string | `aurora` | no |
 | engine-version | Aurora database engine version. | string | `5.6.10a` | no |
 | envname | Environment name (eg,test, stage or prod) | string | - | yes |
 | envtype | Environment type (eg,prod or nonprod) | string | - | yes |
 | final_snapshot_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `final` | no |
+| iam_database_authentication_enabled | Whether to enable IAM database authentication for the RDS Cluster | string | `false` | no |
 | identifier_prefix | Prefix for cluster and instance identifier | string | `` | no |
 | instance_type | Instance type to use | string | `db.t2.small` | no |
 | monitoring_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | string | `0` | no |
@@ -214,5 +219,6 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 |------|-------------|
 | all_instance_endpoints_list | Comma separated list of all DB instance endpoints running in cluster |
 | cluster_endpoint | The 'writer' endpoint for the cluster |
+| cluster_identifier | The ID of the RDS Cluster |
 | reader_endpoint | A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas |
 

@@ -1,8 +1,8 @@
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_writer" {
-  count               = "${var.cw_alarms ? 1 : 0}"
+  count               = "${var.enabled && var.cw_alarms ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-writer-DatabaseConnections"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "${var.cw_eval_period_connections}"
   metric_name         = "DatabaseConnections"
   namespace           = "AWS/RDS"
   period              = "60"
@@ -19,10 +19,10 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_writer" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_reader" {
-  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
+  count               = "${var.enabled && var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-DatabaseConnections"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
+  evaluation_periods  = "${var.cw_eval_period_connections}"
   metric_name         = "DatabaseConnections"
   namespace           = "AWS/RDS"
   period              = "60"
@@ -39,10 +39,10 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_reader" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_writer" {
-  count               = "${var.cw_alarms ? 1 : 0}"
+  count               = "${var.enabled && var.cw_alarms ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-writer-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
+  evaluation_periods  = "${var.cw_eval_period_cpu}"
   metric_name         = "CPUUtilization"
   namespace           = "AWS/RDS"
   period              = "60"
@@ -59,10 +59,10 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_writer" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_reader" {
-  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
+  count               = "${var.enabled && var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-CPU"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
+  evaluation_periods  = "${var.cw_eval_period_cpu}"
   metric_name         = "CPUUtilization"
   namespace           = "AWS/RDS"
   period              = "60"
@@ -79,10 +79,10 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_CPU_reader" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_rds_replica_lag" {
-  count               = "${var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
+  count               = "${var.enabled && var.cw_alarms && var.replica_count > 0 ? 1 : 0}"
   alarm_name          = "${aws_rds_cluster.default.id}-alarm-rds-reader-AuroraReplicaLag"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "5"
+  evaluation_periods  = "${var.cw_eval_period_replica_lag}"
   metric_name         = "AuroraReplicaLag"
   namespace           = "AWS/RDS"
   period              = "60"
