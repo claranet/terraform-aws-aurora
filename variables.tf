@@ -182,6 +182,24 @@ variable "cw_max_replica_lag" {
   description = "Maximum Aurora replica lag in milliseconds above which to alarm"
 }
 
+variable "cw_eval_period_connections" {
+  type        = "string"
+  default     = "1"
+  description = "Evaluation period for the DB connections alarms"
+}
+
+variable "cw_eval_period_cpu" {
+  type        = "string"
+  default     = "2"
+  description = "Evaluation period for the DB CPU alarms"
+}
+
+variable "cw_eval_period_replica_lag" {
+  type        = "string"
+  default     = "5"
+  description = "Evaluation period for the DB replica lag alarm"
+}
+
 variable "engine" {
   type        = "string"
   default     = "aurora"
@@ -234,4 +252,16 @@ variable "performance_insights_enabled" {
   type        = "string"
   default     = false
   description = "Whether to enable Performance Insights"
+}
+
+variable "iam_database_authentication_enabled" {
+  type        = "string"
+  default     = false
+  description = "Whether to enable IAM database authentication for the RDS Cluster"
+}
+
+variable "enabled" {
+  type        = "string"
+  default     = true
+  description = "Whether the database resources should be created"
 }
