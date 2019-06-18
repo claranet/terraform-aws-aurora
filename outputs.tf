@@ -3,7 +3,7 @@ output "cluster_endpoint" {
   value = join("", aws_rds_cluster.default.*.endpoint)
 }
 
-// Comma separated list of all DB instance endpoints running in cluster
+// List of all DB instance endpoints running in cluster
 output "all_instance_endpoints_list" {
   value = [concat(
     aws_rds_cluster_instance.cluster_instance_0.*.endpoint,
