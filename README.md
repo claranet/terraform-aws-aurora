@@ -189,11 +189,10 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | port | The port on which to accept connections | string | `3306` | no |
 | preferred_backup_window | When to perform DB backups | string | `02:00-03:00` | no |
 | preferred_maintenance_window | When to perform DB maintenance | string | `sun:05:00-sun:06:00` | no |
-| predefined_metric_type | The metric type to scale on | string | `RDSReaderAverageCPUUtilization` | no |
 | publicly_accessible | Whether the DB should have a public IP address | string | `false` | no |
 | replica_count | Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead. | string | `0` | no |
-| replica_scale_cpu | CPU usage to trigger autoscaling at | string | `70` | no |
-| replica_scale_connections | Number of connections to trigger autoscaling at | string | `700` | no |
+| replica_scale_cpu | CPU usage to trigger autoscaling at | string | `0` | no |
+| replica_scale_connections | Number of connections to trigger autoscaling at | string | `0` | no |
 | replica_scale_enabled | Whether to enable autoscaling for RDS Aurora (MySQL) read replicas | string | `false` | no |
 | replica_scale_in_cooldown | Cooldown in seconds before allowing further scaling operations after a scale in | string | `300` | no |
 | replica_scale_max | Maximum number of replicas to allow scaling for | string | `0` | no |

@@ -202,13 +202,13 @@ variable "replica_scale_min" {
 
 variable "replica_scale_cpu" {
   type        = "string"
-  default     = "70"
+  default     = "0"
   description = "CPU usage to trigger autoscaling at"
 }
 
 variable "replica_scale_connections" {
   type        = "string"
-  default     = 700
+  default     = "0"
   description = "Number of connections to trigger autoscaling at"
 }
 
@@ -222,12 +222,6 @@ variable "replica_scale_out_cooldown" {
   type        = "string"
   default     = "300"
   description = "Cooldown in seconds before allowing further scaling operations after a scale out"
-}
-
-variable "predefined_metric_type" {
-  type        = "string"
-  description = "The metric type to scale on. Valid values are RDSReaderAverageCPUUtilization and RDSReaderAverageDatabaseConnections"
-  default     = "RDSReaderAverageCPUUtilization"
 }
 
 variable "performance_insights_enabled" {
