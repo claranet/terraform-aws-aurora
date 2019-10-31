@@ -202,8 +202,14 @@ variable "replica_scale_min" {
 
 variable "replica_scale_cpu" {
   type        = "string"
-  default     = "70"
+  default     = "0"
   description = "CPU usage to trigger autoscaling at"
+}
+
+variable "replica_scale_connections" {
+  type        = "string"
+  default     = "0"
+  description = "Number of connections to trigger autoscaling at"
 }
 
 variable "replica_scale_in_cooldown" {

@@ -288,8 +288,8 @@ resource "aws_appautoscaling_target" "autoscaling" {
   service_namespace  = "rds"
 }
 
-resource "aws_appautoscaling_policy" "autoscaling" {
-  count              = "${var.replica_scale_enabled ? 1 : 0}"
+resource "aws_appautoscaling_policy" "autoscaling_cpu" {
+  count              = "${var.replica_scale_cpu > 0 ? 1 : 0}"
   depends_on         = ["aws_appautoscaling_target.autoscaling"]
   name               = "target-metric"
   policy_type        = "TargetTrackingScaling"
@@ -305,5 +305,25 @@ resource "aws_appautoscaling_policy" "autoscaling" {
     scale_in_cooldown  = "${var.replica_scale_in_cooldown}"
     scale_out_cooldown = "${var.replica_scale_out_cooldown}"
     target_value       = "${var.replica_scale_cpu}"
+  }
+}
+
+resource "aws_appautoscaling_policy" "autoscaling_connections" {
+  count              = "${var.replica_scale_connections > 0 ? 1 : 0}"
+  depends_on         = ["aws_appautoscaling_target.autoscaling"]
+  name               = "target-metric"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
+  scalable_dimension = "rds:cluster:ReadReplicaCount"
+  service_namespace  = "rds"
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "RDSReaderAverageDatabaseConnections"
+    }
+
+    scale_in_cooldown  = "${var.replica_scale_in_cooldown}"
+    scale_out_cooldown = "${var.replica_scale_out_cooldown}"
+    target_value       = "${var.replica_scale_connections}"
   }
 }
