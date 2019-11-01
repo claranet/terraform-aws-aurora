@@ -291,7 +291,7 @@ resource "aws_appautoscaling_target" "autoscaling" {
 resource "aws_appautoscaling_policy" "autoscaling_cpu" {
   count              = "${var.replica_scale_cpu > 0 ? 1 : 0}"
   depends_on         = ["aws_appautoscaling_target.autoscaling"]
-  name               = "target-metric"
+  name               = "target-metric-cpu"
   policy_type        = "TargetTrackingScaling"
   resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
   scalable_dimension = "rds:cluster:ReadReplicaCount"
@@ -311,7 +311,7 @@ resource "aws_appautoscaling_policy" "autoscaling_cpu" {
 resource "aws_appautoscaling_policy" "autoscaling_connections" {
   count              = "${var.replica_scale_connections > 0 ? 1 : 0}"
   depends_on         = ["aws_appautoscaling_target.autoscaling"]
-  name               = "target-metric"
+  name               = "target-metric-connections"
   policy_type        = "TargetTrackingScaling"
   resource_id        = "cluster:${aws_rds_cluster.default.cluster_identifier}"
   scalable_dimension = "rds:cluster:ReadReplicaCount"
