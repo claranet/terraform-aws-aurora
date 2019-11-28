@@ -8,6 +8,8 @@
   *  - A DB subnet group
   *  - An Aurora DB cluster
   *  - An Aurora DB instance + 'n' number of additional instances
+  *  - Optionally cross-region DB subnet group
+  *  - Optionally cross-region Aurora DB read replica instance
   *  - Optionally RDS 'Enhanced Monitoring' + associated required IAM role/policy (by simply setting the `monitoring_interval` param to > `0`
   *  - Optionally sensible alarms to SNS (high CPU, high connections, slow replication)
   *  - Optionally configure autoscaling for read replicas (MySQL clusters only)
@@ -30,11 +32,11 @@
   *
   * ### Aurora 1.x (MySQL 5.6)
   *
-  * 
+  *
   * resource "aws_sns_topic" "db_alarms_56" {
   *   name = "aurora-db-alarms-56"
   * }
-  * 
+  *
   * module "aurora_db_56" {
   *   source                          = "../.."
   *   name                            = "test-aurora-db-56"
@@ -57,13 +59,13 @@
   *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_56_parameter_group.id}"
   *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_56_parameter_group.id}"
   * }
-  * 
+  *
   * resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
   *   name        = "test-aurora-db-56-parameter-group"
   *   family      = "aurora5.6"
   *   description = "test-aurora-db-56-parameter-group"
   * }
-  * 
+  *
   * resource "aws_rds_cluster_parameter_group" "aurora_cluster_56_parameter_group" {
   *   name        = "test-aurora-56-cluster-parameter-group"
   *   family      = "aurora5.6"
@@ -76,7 +78,7 @@
   * resource "aws_sns_topic" "db_alarms" {
   *   name = "aurora-db-alarms"
   * }
-  * 
+  *
   * module "aurora_db_57" {
   *   source                          = "../.."
   *   engine                          = "aurora-mysql"
@@ -101,13 +103,13 @@
   *   db_parameter_group_name         = "${aws_db_parameter_group.aurora_db_57_parameter_group.id}"
   *   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_57_cluster_parameter_group.id}"
   * }
-  * 
+  *
   * resource "aws_db_parameter_group" "aurora_db_57_parameter_group" {
   *   name        = "test-aurora-db-57-parameter-group"
   *   family      = "aurora-mysql5.7"
   *   description = "test-aurora-db-57-parameter-group"
   * }
-  * 
+  *
   * resource "aws_rds_cluster_parameter_group" "aurora_57_cluster_parameter_group" {
   *   name        = "test-aurora-57-cluster-parameter-group"
   *   family      = "aurora-mysql5.7"
@@ -172,6 +174,19 @@ resource "aws_db_subnet_group" "main" {
   }
 }
 
+// DB Subnet Cross Region Group creation
+resource "aws_db_subnet_group" "region" {
+  count       = "${var.replica_region_enabled ? 1 : 0}"
+  name        = "${var.name}-region"
+  description = "Group of DB subnets in this region"
+  subnet_ids  = ["${var.subnets_region}"]
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
+}
+
 // Create single DB instance
 resource "aws_rds_cluster_instance" "cluster_instance_0" {
   identifier                   = "${var.identifier_prefix != "" ? format("%s-node-0", var.identifier_prefix) : format("%s-aurora-node-0", var.envname)}"
@@ -222,6 +237,31 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   }
 }
 
+// Create cross region replica instance
+resource "aws_db_instance" "replica_region_0" {
+  depends_on                   = ["aws_rds_cluster_instance.cluster_instance_0"]
+  count                        = "${var.replica_region_enabled ? 1 : 0}"
+  engine                       = "${var.engine}"
+  engine_version               = "${var.engine-version}"
+  identifier                   = "${var.identifier_prefix != "" ? format("%s-replica-0", var.identifier_prefix) : format("%s-aurora-replica-0", var.envname)}"
+  instance_class               = "${var.instance_type}"
+  publicly_accessible          = "${var.publicly_accessible}"
+  db_subnet_group_name         = "${aws_db_subnet_group.region.name}"
+  parameter_group_name         = "${var.db_region_parameter_group_name}"
+  apply_immediately            = "${var.apply_immediately}"
+  monitoring_role_arn          = "${join("", aws_iam_role.rds-enhanced-monitoring.*.arn)}"
+  monitoring_interval          = "${var.monitoring_interval}"
+  auto_minor_version_upgrade   = "${var.auto_minor_version_upgrade}"
+  performance_insights_enabled = "${var.performance_insights_enabled}"
+  replicate_source_db          = "${var.replicate_source_db}"
+
+  tags {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
+}
+
+
 // Create DB Cluster
 resource "aws_rds_cluster" "default" {
   cluster_identifier = "${var.identifier_prefix != "" ? format("%s-cluster", var.identifier_prefix) : format("%s-aurora-cluster", var.envname)}"
@@ -245,7 +285,7 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
 }
 
-// Geneate an ID when an environment is initialised
+// Generate an ID when an environment is initialised
 resource "random_id" "server" {
   keepers = {
     id = "${aws_db_subnet_group.main.name}"

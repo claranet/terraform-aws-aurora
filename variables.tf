@@ -8,6 +8,11 @@ variable "subnets" {
   description = "List of subnet IDs to use"
 }
 
+variable "subnets_region" {
+  type        = "list"
+  description = "List of subnet IDs to use in a different region"
+}
+
 variable "envname" {
   type        = "string"
   description = "Environment name (eg,test, stage or prod)"
@@ -122,6 +127,12 @@ variable "db_parameter_group_name" {
   description = "The name of a DB parameter group to use"
 }
 
+variable "db_region_parameter_group_name" {
+  type        = "string"
+  default     = "default.aurora5.6"
+  description = "The name of a DB parameter group to use in a different region"
+}
+
 variable "db_cluster_parameter_group_name" {
   type        = "string"
   default     = "default.aurora5.6"
@@ -180,6 +191,18 @@ variable "engine-version" {
   type        = "string"
   default     = "5.6.10a"
   description = "Aurora database engine version."
+}
+
+variable "replica_region_enabled" {
+  type        = "string"
+  default     = false
+  description = "Whether to create a cross region read replica instance"
+}
+
+variable "replicate_source_db" {
+  type        = "string"
+  default     = ""
+  description = "DB identifier of another Amazon RDS Database to replicate"
 }
 
 variable "replica_scale_enabled" {

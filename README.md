@@ -7,6 +7,8 @@ Gives you:
  - A DB subnet group
  - An Aurora DB cluster
  - An Aurora DB instance + 'n' number of additional instances
+ - Optionally cross-region DB subnet group
+ - Optionally cross-region Aurora DB read replica instance
  - Optionally RDS 'Enhanced Monitoring' + associated required IAM role/policy (by simply setting the `monitoring_interval` param to > `0`
  - Optionally sensible alarms to SNS (high CPU, high connections, slow replication)
  - Optionally configure autoscaling for read replicas
@@ -198,11 +200,15 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | replica_scale_max | Maximum number of replicas to allow scaling for | string | `0` | no |
 | replica_scale_min | Maximum number of replicas to allow scaling for | string | `2` | no |
 | replica_scale_out_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out | string | `300` | no |
+| replica_region_enabled | Whether to create a cross region read replica instance | string | `false` | no |
+| db_region_parameter_group_name | The name of a DB parameter group to use in a different region | string | `default.aurora5.6` | no |
+| replicate_source_db | DB identifier of another Amazon RDS Database to replicate | string | `` | no |
 | security_groups | VPC Security Group IDs | list | - | yes |
 | skip_final_snapshot | Should a final snapshot be created on cluster destroy | string | `false` | no |
 | snapshot_identifier | DB snapshot to create this database from | string | `` | no |
 | storage_encrypted | Specifies whether the underlying storage layer should be encrypted | string | `true` | no |
 | subnets | List of subnet IDs to use | list | - | yes |
+| subnets_region | List of subnet IDs to use in a different region | list | - | yes |
 | username | Master DB username | string | `root` | no |
 
 ## Outputs
@@ -212,4 +218,3 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | all_instance_endpoints_list | Comma separated list of all DB instance endpoints running in cluster |
 | cluster_endpoint | The 'writer' endpoint for the cluster |
 | reader_endpoint | A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas |
-
