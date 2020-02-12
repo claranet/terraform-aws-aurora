@@ -1,0 +1,17 @@
+name: README.md
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker run --rm -v $PWD:/data claranet/terraform-docs:0.8.1 terraform-docs-replace-012 --sort-inputs-by-required --with-aggregate-type-defaults --no-providers md README.md
+      - uses: claranet/git-auto-commit-action@v3.0.0
+        with:
+          file_pattern: README.md
+          commit_message: Update README.md using terraform-docs
