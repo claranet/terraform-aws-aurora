@@ -210,6 +210,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_
 | skip_final_snapshot | Should a final snapshot be created on cluster destroy | string | `false` | no |
 | snapshot_identifier | DB snapshot to create this database from | string | `` | no |
 | storage_encrypted | Specifies whether the underlying storage layer should be encrypted | string | `true` | no |
+| kms_key_id | Specify the KMS Key to use for encryption | string | `aws/rds` | no |
 | subnets | List of subnet IDs to use | list | - | yes |
 | username | Master DB username | string | `root` | no |
 

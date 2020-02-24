@@ -140,6 +140,12 @@ variable "storage_encrypted" {
   description = "Specifies whether the underlying storage layer should be encrypted"
 }
 
+variable "kms_key_id" {
+  type = "string"
+  default = ""
+  description = "Specify the KMS Key to use for encryption"
+}
+
 variable "cw_alarms" {
   type        = "string"
   default     = false
