@@ -20,4 +20,3 @@ output "reader_endpoint" {
 output "cluster_identifier" {
   value = join("", aws_rds_cluster.default.*.id)
 }
-
