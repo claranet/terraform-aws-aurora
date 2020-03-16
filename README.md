@@ -230,6 +230,7 @@ so don't bother manually changing them.
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy | `string` | `"false"` | no |
 | snapshot\_identifier | DB snapshot to create this database from | `string` | `""` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted | `string` | `"true"` | no |
+| kms\_key\_id | Specify the KMS Key to use for encryption | string | `""` | no |
 | username | Master DB username | `string` | `"root"` | no |
 
 ## Outputs
