@@ -214,6 +214,7 @@ so don't bother manually changing them.
 | iam\_database\_authentication\_enabled | Whether to enable IAM database authentication for the RDS Cluster | `string` | `false` | no |
 | identifier\_prefix | Prefix for cluster and instance identifier | `string` | `""` | no |
 | instance\_type | Instance type to use | `string` | `"db.t2.small"` | no |
+| kms\_key\_id | Specify the KMS Key to use for encryption | `string` | `""` | no |
 | monitoring\_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected | `string` | `0` | no |
 | performance\_insights\_enabled | Whether to enable Performance Insights | `string` | `false` | no |
 | port | The port on which to accept connections | `string` | `"3306"` | no |
@@ -230,7 +231,6 @@ so don't bother manually changing them.
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy | `string` | `"false"` | no |
 | snapshot\_identifier | DB snapshot to create this database from | `string` | `""` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted | `string` | `"true"` | no |
-| kms\_key\_id | Specify the KMS Key to use for encryption | string | `""` | no |
 | username | Master DB username | `string` | `"root"` | no |
 
 ## Outputs
