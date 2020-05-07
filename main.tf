@@ -5,10 +5,10 @@ resource "aws_db_subnet_group" "main" {
   description = "Group of DB subnets"
   subnet_ids  = var.subnets
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create single DB instance
@@ -32,10 +32,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   promotion_tier               = "0"
   performance_insights_enabled = var.performance_insights_enabled
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -58,10 +58,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   promotion_tier               = count.index + 1
   performance_insights_enabled = var.performance_insights_enabled
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create DB Cluster
