@@ -141,8 +141,8 @@ variable "storage_encrypted" {
 }
 
 variable "kms_key_id" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "Specify the KMS Key to use for encryption"
 }
 
@@ -264,4 +264,10 @@ variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   default     = []
   description = "List of log types to export to CloudWatch Logs. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql."
+}
+
+variable "extra_tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of extra tags for resources"
 }

@@ -5,10 +5,10 @@ resource "aws_db_subnet_group" "main" {
   description = "Group of DB subnets"
   subnet_ids  = var.subnets
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create single DB instance
@@ -32,10 +32,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   promotion_tier               = "0"
   performance_insights_enabled = var.performance_insights_enabled
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -58,10 +58,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   promotion_tier               = count.index + 1
   performance_insights_enabled = var.performance_insights_enabled
 
-  tags = {
+  tags = merge({
     envname = var.envname
     envtype = var.envtype
-  }
+  }, var.extra_tags)
 }
 
 // Create DB Cluster
@@ -89,6 +89,11 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name     = var.db_cluster_parameter_group_name
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
+
+  tags = merge({
+    envname = var.envname
+    envtype = var.envtype
+  }, var.extra_tags)
 }
 
 // Geneate an ID when an environment is initialised
