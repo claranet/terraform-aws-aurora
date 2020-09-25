@@ -141,8 +141,8 @@ variable "storage_encrypted" {
 }
 
 variable "kms_key_id" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "Specify the KMS Key to use for encryption"
 }
 
@@ -264,4 +264,10 @@ variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   default     = []
   description = "List of log types to export to CloudWatch Logs. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql."
+}
+
+variable "enhanced_monitoring_iam_role_prefix" {
+  type        = string
+  default     = "rds-enhanced-mon-"
+  description = "RDS Enhanced Monitoring IAM role name prefix"
 }

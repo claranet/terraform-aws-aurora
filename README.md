@@ -210,6 +210,7 @@ so don't bother manually changing them.
 | enabled\_cloudwatch\_logs\_exports | List of log types to export to CloudWatch Logs. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql. | `list(string)` | `[]` | no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql | `string` | `"aurora"` | no |
 | engine-version | Aurora database engine version. | `string` | `"5.6.10a"` | no |
+| enhanced_monitoring_iam_role_prefix | Enhanced Monitoring IAM role prefix | `string` | `"rds-enhanced-mon-"` | no |
 | final\_snapshot\_identifier | The name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | `string` | `"final"` | no |
 | iam\_database\_authentication\_enabled | Whether to enable IAM database authentication for the RDS Cluster | `string` | `false` | no |
 | identifier\_prefix | Prefix for cluster and instance identifier | `string` | `""` | no |

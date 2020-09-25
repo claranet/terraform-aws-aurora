@@ -116,7 +116,7 @@ data "aws_iam_policy_document" "monitoring-rds-assume-role-policy" {
 
 resource "aws_iam_role" "rds-enhanced-monitoring" {
   count              = var.enabled && var.monitoring_interval > 0 ? 1 : 0
-  name_prefix        = "rds-enhanced-mon-${var.envname}-"
+  name_prefix        = "${var.enhanced_monitoring_iam_role_prefix}${var.envname}-"
   assume_role_policy = data.aws_iam_policy_document.monitoring-rds-assume-role-policy[0].json
 }
 
