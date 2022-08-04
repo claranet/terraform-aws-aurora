@@ -20,3 +20,11 @@ output "reader_endpoint" {
 output "cluster_identifier" {
   value = join("", aws_rds_cluster.default.*.id)
 }
+
+// List of all DB instance ids running in cluster
+output "all_instance_endpoints_list" {
+  value = [concat(
+    aws_rds_cluster_instance.cluster_instance_0.*.id,
+    aws_rds_cluster_instance.cluster_instance_n.*.id,
+  )]
+}
