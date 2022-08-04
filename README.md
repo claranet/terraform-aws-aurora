@@ -232,6 +232,7 @@ so don't bother manually changing them.
 | snapshot\_identifier | DB snapshot to create this database from | `string` | `""` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted | `string` | `"true"` | no |
 | username | Master DB username | `string` | `"root"` | no |
+| extra_tags | A map of additional tags for resources | `map` | `{}` | no |
 
 ## Outputs
 
