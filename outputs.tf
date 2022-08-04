@@ -31,5 +31,5 @@ output "all_instance_ids_list" {
 
 // A list of cluster members
 output "cluster_members" {
-  value = join("", aws_rds_cluster.default.*.cluster_members)
+  value = flatten(aws_rds_cluster.default.*.cluster_members)
 }
