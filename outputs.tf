@@ -28,3 +28,8 @@ output "all_instance_ids_list" {
     aws_rds_cluster_instance.cluster_instance_n.*.id,
   )]
 }
+
+// A list of cluster members
+output "cluster_members" {
+  value = join("", aws_rds_cluster.default.*.cluster_members)
+}
