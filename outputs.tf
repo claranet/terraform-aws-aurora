@@ -22,7 +22,7 @@ output "cluster_identifier" {
 }
 
 // List of all DB instance ids running in cluster
-output "all_instance_endpoints_list" {
+output "all_instance_ids_list" {
   value = [concat(
     aws_rds_cluster_instance.cluster_instance_0.*.id,
     aws_rds_cluster_instance.cluster_instance_n.*.id,
