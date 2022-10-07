@@ -20,3 +20,8 @@ output "reader_endpoint" {
 output "cluster_identifier" {
   value = join("", aws_rds_cluster.default.*.id)
 }
+
+// List of RDS Instances that are a part of this cluster
+output "cluster_members" {
+  value = join("", flatten([aws_rds_cluster.default.*.cluster_members]))
+}

@@ -43,7 +43,7 @@ resource "aws_sns_topic" "db_alarms_56" {
 }
 
 module "aurora_db_56" {
-  source  = "claranet/aurora/aws"
+  source  = "synalogik/aurora/aws"
   version = "x.y.z"
 
   name                                = "test-aurora-db-56"
@@ -89,7 +89,7 @@ resource "aws_sns_topic" "db_alarms" {
 }
 
 module "aurora_db_57" {
-  source  = "claranet/aurora/aws"
+  source  = "synalogik/aurora/aws"
   version = "x.y.z"
 
   engine                              = "aurora-mysql"
@@ -137,7 +137,7 @@ resource "aws_sns_topic" "db_alarms_postgres96" {
 }
 
 module "aurora_db_postgres96" {
-  source  = "claranet/aurora/aws"
+  source  = "synalogik/aurora/aws"
   version = "x.y.z"
 
   engine                              = "aurora-postgresql"
@@ -240,7 +240,9 @@ so don't bother manually changing them.
 | all\_instance\_endpoints\_list | List of all DB instance endpoints running in cluster |
 | cluster\_endpoint | The 'writer' endpoint for the cluster |
 | cluster\_identifier | The ID of the RDS Cluster |
+| cluster\_members | List of RDS Instances that are a part of this cluster |
 | reader\_endpoint | A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas |
+
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
