@@ -166,13 +166,8 @@ resource "aws_db_subnet_group" "main" {
   description = "Group of DB subnets"
   subnet_ids  = ["${var.subnets}"]
 
-  dynamic "tags" {
-    for_each = "${local.tags}"
-    content {
-      key                 = "${tags.value.key}"
-      value               = "${tags.value.value}"
-    }
-  }  
+
+  tags = "${local.tags}"
 }
 
 // Create single DB instance
@@ -193,13 +188,8 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   promotion_tier               = "0"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  dynamic "tags" {
-    for_each = "${local.tags}"
-    content {
-      key                 = "${tags.value.key}"
-      value               = "${tags.value.value}"
-    }
-  }  
+
+  tags = "${local.tags}"
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -222,13 +212,8 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   promotion_tier               = "${count.index + 1}"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  dynamic "tags" {
-    for_each = "${local.tags}"
-    content {
-      key                 = "${tags.value.key}"
-      value               = "${tags.value.value}"
-    }
-  }  
+ 
+  tags = "${local.tags}"
 }
 
 // Create DB Cluster
@@ -253,13 +238,8 @@ resource "aws_rds_cluster" "default" {
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
 
-  dynamic "tags" {
-    for_each = "${local.tags}"
-    content {
-      key                 = "${tags.value.key}"
-      value               = "${tags.value.value}"
-    }
-  }  
+  tags = "${local.tags}"
+  
 }
 
 // Geneate an ID when an environment is initialised
@@ -346,16 +326,9 @@ resource "aws_appautoscaling_policy" "autoscaling_connections" {
 }
 
 locals {
-  default_tags = [
-    {
-      key                 = "envname"
-      value               = var.envname
-    },
-    {
-      key                 = "envtype"
-      value               = var.envtype
-    }
-  ]
-
-  tags = "${concat(local.default_tags, var.extra_tags)}"
+  default_tags = {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
+  tags = "${merge(local.default_tags, var.extra_tags)}"
 }
