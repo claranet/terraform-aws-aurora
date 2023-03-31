@@ -128,6 +128,12 @@ variable "db_cluster_parameter_group_name" {
   description = "The name of a DB Cluster parameter group to use"
 }
 
+variable "extra_tags" {
+  type = "list"
+  description = "Optional tags to describe cluster"
+  default = []
+}
+
 variable "snapshot_identifier" {
   type        = "string"
   default     = ""

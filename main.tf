@@ -8,7 +8,7 @@
   *  - A DB subnet group
   *  - An Aurora DB cluster
   *  - An Aurora DB instance + 'n' number of additional instances
-  *  - Optionally RDS 'Enhanced Monitoring' + associated required IAM role/policy (by simply setting the `monitoring_interval` param to > `0`
+  *  - Optionally RDS 'Enhanced Monitoring' + associated required IAM role/policy (by simply setting the `monitoring_interval` param to > `0`)
   *  - Optionally sensible alarms to SNS (high CPU, high connections, slow replication)
   *  - Optionally configure autoscaling for read replicas (MySQL clusters only)
   *
@@ -166,9 +166,12 @@ resource "aws_db_subnet_group" "main" {
   description = "Group of DB subnets"
   subnet_ids  = ["${var.subnets}"]
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
+  dynamic "tags" {
+    for_each = local.tags
+    content {
+      key                 = tags.value.key
+      value               = tags.value.value
+    }
   }
 }
 
@@ -190,9 +193,12 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   promotion_tier               = "0"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
+  dynamic "tags" {
+    for_each = local.tags
+    content {
+      key                 = tags.value.key
+      value               = tags.value.value
+    }
   }
 }
 
@@ -216,9 +222,12 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   promotion_tier               = "${count.index + 1}"
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
-  tags {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
+  dynamic "tags" {
+    for_each = local.tags
+    content {
+      key                 = tags.value.key
+      value               = tags.value.value
+    }
   }
 }
 
@@ -243,6 +252,14 @@ resource "aws_rds_cluster" "default" {
   storage_encrypted               = "${var.storage_encrypted}"
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
+
+  dynamic "tags" {
+    for_each = local.tags
+    content {
+      key                 = tags.value.key
+      value               = tags.value.value
+    }
+  }  
 }
 
 // Geneate an ID when an environment is initialised
@@ -326,4 +343,22 @@ resource "aws_appautoscaling_policy" "autoscaling_connections" {
     scale_out_cooldown = "${var.replica_scale_out_cooldown}"
     target_value       = "${var.replica_scale_connections}"
   }
+}
+
+locals {
+  default_tags = [
+    {
+      key                 = "envname"
+      value               = var.envname
+    },
+    {
+      key                 = "envtype"
+      value               = var.envtype
+    }
+  ]
+
+  tags = concat(
+    local.default_tags,
+    var.extra_tags 
+  )
 }
