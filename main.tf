@@ -167,12 +167,12 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids  = ["${var.subnets}"]
 
   dynamic "tags" {
-    for_each = "${local.tags}}"
+    for_each = "${local.tags}"
     content {
-      key                 = tags.value.key
-      value               = tags.value.value
+      key                 = "${tags.value.key}"
+      value               = "${tags.value.value}"
     }
-  }
+  }  
 }
 
 // Create single DB instance
@@ -196,10 +196,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   dynamic "tags" {
     for_each = "${local.tags}"
     content {
-      key                 = tags.value.key
-      value               = tags.value.value
+      key                 = "${tags.value.key}"
+      value               = "${tags.value.value}"
     }
-  }
+  }  
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -225,10 +225,10 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   dynamic "tags" {
     for_each = "${local.tags}"
     content {
-      key                 = tags.value.key
-      value               = tags.value.value
+      key                 = "${tags.value.key}"
+      value               = "${tags.value.value}"
     }
-  }
+  }  
 }
 
 // Create DB Cluster
@@ -256,8 +256,8 @@ resource "aws_rds_cluster" "default" {
   dynamic "tags" {
     for_each = "${local.tags}"
     content {
-      key                 = tags.value.key
-      value               = tags.value.value
+      key                 = "${tags.value.key}"
+      value               = "${tags.value.value}"
     }
   }  
 }
