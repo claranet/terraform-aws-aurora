@@ -167,7 +167,7 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids  = ["${var.subnets}"]
 
   dynamic "tags" {
-    for_each = local.tags
+    for_each = "${local.tags}}"
     content {
       key                 = tags.value.key
       value               = tags.value.value
@@ -194,7 +194,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
   dynamic "tags" {
-    for_each = local.tags
+    for_each = "${local.tags}"
     content {
       key                 = tags.value.key
       value               = tags.value.value
@@ -223,7 +223,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
   dynamic "tags" {
-    for_each = local.tags
+    for_each = "${local.tags}"
     content {
       key                 = tags.value.key
       value               = tags.value.value
@@ -254,7 +254,7 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
 
   dynamic "tags" {
-    for_each = local.tags
+    for_each = "${local.tags}"
     content {
       key                 = tags.value.key
       value               = tags.value.value
@@ -357,8 +357,5 @@ locals {
     }
   ]
 
-  tags = concat(
-    local.default_tags,
-    var.extra_tags 
-  )
+  tags = "${concat(local.default_tags, var.extra_tags)}"
 }
