@@ -167,7 +167,7 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids  = ["${var.subnets}"]
 
 
-  tags = "${local.tags}"
+  tags = "${merge(local.default_tags, var.extra_tags)}"
 }
 
 // Create single DB instance
@@ -189,7 +189,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_0" {
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
 
-  tags = "${local.tags}"
+  tags = "${merge(local.default_tags, var.extra_tags)}"
 }
 
 // Create 'n' number of additional DB instance(s) in same cluster
@@ -213,7 +213,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_n" {
   performance_insights_enabled = "${var.performance_insights_enabled}"
 
  
-  tags = "${local.tags}"
+  tags = "${merge(local.default_tags, var.extra_tags)}"
 }
 
 // Create DB Cluster
@@ -238,7 +238,7 @@ resource "aws_rds_cluster" "default" {
   apply_immediately               = "${var.apply_immediately}"
   db_cluster_parameter_group_name = "${var.db_cluster_parameter_group_name}"
 
-  tags = "${local.tags}"
+  tags = "${merge(local.default_tags, var.extra_tags)}"
   
 }
 
@@ -326,5 +326,8 @@ resource "aws_appautoscaling_policy" "autoscaling_connections" {
 }
 
 locals {
-  tags = "${merge(map("envname", "${var.envname}", "envtype", "${var.envtype}") var.extra_tags)}"
+  default_tags = {
+    envname = "${var.envname}"
+    envtype = "${var.envtype}"
+  }
 }
