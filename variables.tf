@@ -129,9 +129,9 @@ variable "db_cluster_parameter_group_name" {
 }
 
 variable "extra_tags" {
-  type = "list"
+  type = "map"
   description = "Optional tags to describe cluster"
-  default = []
+  default = {}
 }
 
 variable "snapshot_identifier" {
