@@ -326,9 +326,5 @@ resource "aws_appautoscaling_policy" "autoscaling_connections" {
 }
 
 locals {
-  default_tags = {
-    envname = "${var.envname}"
-    envtype = "${var.envtype}"
-  }
-  tags = "${merge(local.default_tags, var.extra_tags)}"
+  tags = "${merge(map("envname", "${var.envname}", "envtype", "${var.envtype}") var.extra_tags)}"
 }
