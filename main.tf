@@ -167,7 +167,7 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids  = ["${var.subnets}"]
 
 
-  tags = "${merge(local.default_tags, var.extra_tags)}"
+  tags = "${merge(local.default_tags)}"
 }
 
 // Create single DB instance
